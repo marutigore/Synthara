@@ -27,7 +27,8 @@ declare module 'papaparse' {
   }
 
   const Papa: {
-    parse<T = any>(csvText: string, config?: ParseConfig): ParseResult<T>;
+    parse<T = any>(csvText: string, config?: any): ParseResult<T>;
+    unparse(data: any[], config?: any): string;
   };
 
   export default Papa;

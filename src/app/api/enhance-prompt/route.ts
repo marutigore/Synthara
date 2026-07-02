@@ -5,6 +5,10 @@ import { logActivity } from '@/lib/supabase/actions';
 
 export async function POST(request: NextRequest) {
   try {
+    const geminiKey = request.headers.get('x-gemini-key');
+    if (geminiKey) {
+      process.env.GOOGLE_GEMINI_API_KEY = geminiKey;
+    }
     const body = await request.json().catch(() => null);
     const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : '';
 

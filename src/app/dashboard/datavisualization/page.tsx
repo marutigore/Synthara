@@ -30,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const MLInsightBadge = dynamic(
   () => import("@/components/dataviz/MLInsightBadge").then(m => m.MLInsightBadge),
@@ -85,6 +85,7 @@ function inferType(values: any[]): ColumnInfo['type'] {
 }
 
 export default function DataVisualizationPage() {
+  const { toast } = useToast();
   const [rows, setRows] = useState<Record<string, any>[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,9 +128,13 @@ export default function DataVisualizationPage() {
     setIsGenerating(true);
     setError(null);
     try {
+      const geminiKey = typeof window !== 'undefined' ? (localStorage.getItem('synthara_gemini_key') || '') : '';
       const res = await fetch('/api/dataviz/suggest-charts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-gemini-key': geminiKey,
+        },
         body: JSON.stringify({
           datasetName,
           columns,

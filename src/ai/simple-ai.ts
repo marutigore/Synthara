@@ -24,6 +24,8 @@ export interface SimpleAIInput {
   model?: string;
   maxTokens?: number;
   temperature?: number;
+  apiKey?: string;
+  sessionId?: string;
 }
 
 export interface SimpleAIOutput {
@@ -60,9 +62,49 @@ export interface StructureRelevantChunksInput {
 
 export class SimpleAI {
   static async generate(input: SimpleAIInput): Promise<SimpleAIOutput> {
-    const { prompt, model = process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3-nano-30b-a3b:free', maxTokens = 8000, temperature = 0.7 } = input;
+    const { prompt, model = process.env.OPENROUTER_MODEL || 'nvidia/nemotron-3-nano-30b-a3b:free', maxTokens = 8000, temperature = 0.7, apiKey } = input;
 
-    if (!openRouterClient) {
+    const geminiKey = apiKey || process.env.GOOGLE_GEMINI_API_KEY;
+    const isGeminiOnly = !openRouterClient || (apiKey && apiKey.startsWith('AIzaSy'));
+
+    if (isGeminiOnly) {
+      if (geminiKey) {
+        console.log('[SimpleAI] Using native Gemini API (either key overridden or OpenRouter client not initialized)...');
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`;
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{ text: prompt }]
+              }],
+              generationConfig: {
+                temperature: temperature,
+                maxOutputTokens: maxTokens,
+              }
+            })
+          });
+
+          if (!response.ok) {
+            const errText = await response.text();
+            throw new Error(`Gemini API HTTP ${response.status}: ${errText}`);
+          }
+
+          const data = await response.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          return {
+            text,
+            model: 'gemini-2.5-flash',
+          };
+        } catch (geminiError: any) {
+          console.error('[SimpleAI] Gemini fallback failed:', geminiError.message);
+          throw new Error(`AI generation failed: ${geminiError.message}`);
+        }
+      }
+
       throw new Error('OpenRouter not initialized. Please set OPENROUTER_API_KEY environment variable.');
     }
 
@@ -91,7 +133,7 @@ export class SimpleAI {
 
       messages.push({ role: 'user', content: prompt });
 
-      const completion = await openRouterClient.chat.completions.create({
+      const completion = await openRouterClient!.chat.completions.create({
         model: model,
         messages: messages,
         temperature: temperature,

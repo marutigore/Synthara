@@ -76,6 +76,10 @@ function pickCharts(columns: ColumnInfo[], datasetName?: string): ChartSpec[] {
 
 export async function POST(req: NextRequest) {
   try {
+    const geminiKey = req.headers.get('x-gemini-key');
+    if (geminiKey) {
+      process.env.GOOGLE_GEMINI_API_KEY = geminiKey;
+    }
     const body = (await req.json()) as SuggestChartsRequest;
     if (!body || !Array.isArray(body.columns) || body.columns.length === 0) {
       return NextResponse.json({ error: 'columns required' }, { status: 400 });
@@ -84,7 +88,7 @@ export async function POST(req: NextRequest) {
     // Try AI first if OpenRouter is configured
     let aiCharts: ChartSpec[] | null = null;
     let aiModel: string | null = null;
-    if (process.env.OPENROUTER_API_KEY) {
+    if (process.env.OPENROUTER_API_KEY || process.env.GOOGLE_GEMINI_API_KEY) {
       try {
         const schemaShape = {
           charts: [

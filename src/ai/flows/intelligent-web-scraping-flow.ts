@@ -564,10 +564,20 @@ async function scrapeUrlsWithCrawl4AI(
               contentString = '';
             }
 
+            const rawHtmlLength = (crawlResult.html && typeof crawlResult.html === 'string') ? crawlResult.html.length : 0;
+            const cleanLength = contentString.length;
+            const noiseReductionRatio = rawHtmlLength > 0 && cleanLength < rawHtmlLength
+              ? Math.round((1 - (cleanLength / rawHtmlLength)) * 100)
+              : 0;
+
             const content = {
               url: url,
               title: crawlResult.title || url,
               content: contentString,
+              status: 'success',
+              statusCode: 200,
+              sizeBytes: cleanLength,
+              noiseReductionRatio: noiseReductionRatio,
             };
 
             // Send scraped content to logger for real-time display
@@ -578,6 +588,20 @@ async function scrapeUrlsWithCrawl4AI(
             throw new Error(result.error || 'Failed to extract content');
           }
         } catch (error: any) {
+          // Send failure metadata to logger
+          const statusCode = error.message.includes('403') ? 403 : error.message.includes('404') ? 404 : 500;
+          const errorContent = {
+            url: url,
+            title: url,
+            content: '',
+            status: 'failed',
+            statusCode: statusCode,
+            sizeBytes: 0,
+            noiseReductionRatio: 0,
+            errorMessage: error.message
+          };
+          logger?.info(`SCRAPED_CONTENT:${JSON.stringify(errorContent)}`);
+
           // Handle different types of errors gracefully
           if (error.message.includes('HTTP 500')) {
             logger?.error(`❌ Failed to scrape ${url}: HTTP 500: Internal Server Error`);

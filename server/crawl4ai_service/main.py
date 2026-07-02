@@ -15,7 +15,7 @@ try:
     load_dotenv()
 except Exception:
     pass
-
+#the git modification demo 
 SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL", "https://your-project.supabase.co")
 SUPABASE_ANON_KEY = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY", "your-anon-key-here")
 

@@ -88,9 +88,13 @@ export default function AIChartSuggestionsPage() {
     setIsGenerating(true);
     setError(null);
     try {
+      const geminiKey = typeof window !== 'undefined' ? (localStorage.getItem('synthara_gemini_key') || '') : '';
       const res = await fetch('/api/dataviz/suggest-charts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-gemini-key': geminiKey,
+        },
         body: JSON.stringify({
           datasetName,
           columns,

@@ -1,8 +1,8 @@
 -- Complete Supabase Database Schema for Synthara AI
 -- Run this in your Supabase SQL Editor
 
--- Enable Row Level Security
-ALTER DATABASE postgres SET "app.jwt_secret" TO 'your-jwt-secret';
+-- Enable Row Level Security (redundant on hosted Supabase, commented out)
+-- ALTER DATABASE postgres SET "app.jwt_secret" TO 'your-jwt-secret';
 
 -- Create user_activities table with all required columns
 CREATE TABLE IF NOT EXISTS public.user_activities (
@@ -106,7 +106,7 @@ CREATE POLICY "Users can delete their own datasets" ON public.generated_datasets
 
 ALTER TABLE public.generated_datasets ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT FALSE;
 
-CREATE POLICY IF NOT EXISTS "Anyone can view public datasets" ON public.generated_datasets
+CREATE POLICY "Anyone can view public datasets" ON public.generated_datasets
     FOR SELECT USING (is_public = true);
 
 -- Create RLS policies for user_profiles
@@ -173,16 +173,16 @@ INSERT INTO storage.buckets (id, name, public) VALUES ('datasets', 'datasets', f
 ON CONFLICT (id) DO NOTHING;
 
 -- Create storage policies
-CREATE POLICY IF NOT EXISTS "Users can upload their own files" ON storage.objects
+CREATE POLICY "Users can upload their own files" ON storage.objects
     FOR INSERT WITH CHECK (bucket_id = 'datasets' AND auth.uid()::text = (storage.foldername(name))[1]);
 
-CREATE POLICY IF NOT EXISTS "Users can view their own files" ON storage.objects
+CREATE POLICY "Users can view their own files" ON storage.objects
     FOR SELECT USING (bucket_id = 'datasets' AND auth.uid()::text = (storage.foldername(name))[1]);
 
-CREATE POLICY IF NOT EXISTS "Users can update their own files" ON storage.objects
+CREATE POLICY "Users can update their own files" ON storage.objects
     FOR UPDATE USING (bucket_id = 'datasets' AND auth.uid()::text = (storage.foldername(name))[1]);
 
-CREATE POLICY IF NOT EXISTS "Users can delete their own files" ON storage.objects
+CREATE POLICY "Users can delete their own files" ON storage.objects
     FOR DELETE USING (bucket_id = 'datasets' AND auth.uid()::text = (storage.foldername(name))[1]);
 
 -- Training tables for production-like training lifecycle
@@ -223,30 +223,30 @@ ALTER TABLE public.training_jobs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.training_logs ENABLE ROW LEVEL SECURITY;
 
 -- Policies for training_jobs
-CREATE POLICY IF NOT EXISTS "Users can view their own training jobs" ON public.training_jobs
+CREATE POLICY "Users can view their own training jobs" ON public.training_jobs
     FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can insert their own training jobs" ON public.training_jobs
+CREATE POLICY "Users can insert their own training jobs" ON public.training_jobs
     FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can update their own training jobs" ON public.training_jobs
+CREATE POLICY "Users can update their own training jobs" ON public.training_jobs
     FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can delete their own training jobs" ON public.training_jobs
+CREATE POLICY "Users can delete their own training jobs" ON public.training_jobs
     FOR DELETE USING (auth.uid() = user_id);
 
 -- Policies for training_logs
-CREATE POLICY IF NOT EXISTS "Users can view their own training logs" ON public.training_logs
+CREATE POLICY "Users can view their own training logs" ON public.training_logs
     FOR SELECT USING (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can insert their own training logs" ON public.training_logs
+CREATE POLICY "Users can insert their own training logs" ON public.training_logs
     FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY IF NOT EXISTS "Users can update their own training logs" ON public.training_logs
+CREATE POLICY "Users can update their own training logs" ON public.training_logs
     FOR UPDATE USING (auth.uid() = user_id);
 
 -- Trigger to keep updated_at fresh on training_jobs
-CREATE TRIGGER IF NOT EXISTS update_training_jobs_updated_at 
+CREATE TRIGGER update_training_jobs_updated_at 
     BEFORE UPDATE ON public.training_jobs 
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
@@ -255,14 +255,14 @@ INSERT INTO storage.buckets (id, name, public) VALUES ('models', 'models', false
 ON CONFLICT (id) DO NOTHING;
 
 -- Create storage policies for model artifacts
-CREATE POLICY IF NOT EXISTS "Users can upload their own model artifacts" ON storage.objects
+CREATE POLICY "Users can upload their own model artifacts" ON storage.objects
     FOR INSERT WITH CHECK (bucket_id = 'models' AND auth.uid()::text = (storage.foldername(name))[1]);
 
-CREATE POLICY IF NOT EXISTS "Users can view their own model artifacts" ON storage.objects
+CREATE POLICY "Users can view their own model artifacts" ON storage.objects
     FOR SELECT USING (bucket_id = 'models' AND auth.uid()::text = (storage.foldername(name))[1]);
 
-CREATE POLICY IF NOT EXISTS "Users can update their own model artifacts" ON storage.objects
+CREATE POLICY "Users can update their own model artifacts" ON storage.objects
     FOR UPDATE USING (bucket_id = 'models' AND auth.uid()::text = (storage.foldername(name))[1]);
 
-CREATE POLICY IF NOT EXISTS "Users can delete their own model artifacts" ON storage.objects
+CREATE POLICY "Users can delete their own model artifacts" ON storage.objects
     FOR DELETE USING (bucket_id = 'models' AND auth.uid()::text = (storage.foldername(name))[1]);

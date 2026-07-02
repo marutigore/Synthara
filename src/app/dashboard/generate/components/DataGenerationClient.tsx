@@ -58,6 +58,13 @@ interface GenerationResult {
 interface ScrapedContent {
   content: string;
   timestamp: string;
+  url?: string;
+  title?: string;
+  status?: string;
+  statusCode?: number;
+  sizeBytes?: number;
+  noiseReductionRatio?: number;
+  errorMessage?: string;
 }
 
 export function DataGenerationClient() {
@@ -277,10 +284,12 @@ export function DataGenerationClient() {
     try {
       setIsEnhancing(true);
 
+      const geminiKey = typeof window !== 'undefined' ? (localStorage.getItem('synthara_gemini_key') || '') : '';
       const response = await fetch('/api/enhance-prompt', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-gemini-key': geminiKey,
         },
         body: JSON.stringify({ prompt: currentPrompt }),
       });
@@ -357,10 +366,15 @@ export function DataGenerationClient() {
       };
 
       // Start the generation process using internal pipeline
+      const geminiKey = typeof window !== 'undefined' ? (localStorage.getItem('synthara_gemini_key') || '') : '';
+      const serpapiKey = typeof window !== 'undefined' ? (localStorage.getItem('synthara_serpapi_key') || '') : '';
+
       const response = await fetch('/api/generate-stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-gemini-key': geminiKey,
+          'x-serpapi-key': serpapiKey,
         },
         body: JSON.stringify(requestData),
       });
@@ -442,8 +456,15 @@ export function DataGenerationClient() {
                   try {
                     const content = JSON.parse(parsedData.content);
                     setScrapedContent(prev => [...prev, {
-                      content: content.content || content,
-                      timestamp: new Date().toISOString()
+                      content: content.content || '',
+                      timestamp: new Date().toISOString(),
+                      url: content.url,
+                      title: content.title,
+                      status: content.status,
+                      statusCode: content.statusCode,
+                      sizeBytes: content.sizeBytes,
+                      noiseReductionRatio: content.noiseReductionRatio,
+                      errorMessage: content.errorMessage
                     }]);
                   } catch (e) {
                     setScrapedContent(prev => [...prev, {
@@ -935,41 +956,131 @@ export function DataGenerationClient() {
           </Card>
         )}
 
-        {/* Operational Logs Terminal */}
-        {showTerminal && (
-          <div className="space-y-2">
-            <div className="flex items-center justify-between px-1">
-              <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Operational Logs
-              </span>
-              <Button variant="ghost" size="sm" onClick={() => setShowTerminal(false)} className="h-5 text-[9px] font-bold hover:bg-secondary">HIDE LOGS</Button>
+        {/* Operational Logs Terminal & Scraper Diagnostics Grid */}
+        {(showTerminal || isGenerating || scrapedContent.length > 0) && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-2">
+              <div className="flex items-center justify-between px-1">
+                <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Operational Logs
+                </span>
+                <Button variant="ghost" size="sm" onClick={() => setShowTerminal(false)} className="h-5 text-[9px] font-bold hover:bg-secondary">HIDE LOGS</Button>
+              </div>
+              <div className="rounded-xl overflow-hidden border border-border/50">
+                <SimpleTerminalLogger
+                  ref={terminalLoggerRef}
+                  isActive={isGenerating}
+                  requestData={{
+                    prompt: watchedValues.prompt,
+                    numRows: watchedValues.numRows,
+                    useWebData: watchedValues.useWebData,
+                  }}
+                  onComplete={(result) => {
+                    setGenerationResult(result);
+                    setIsGenerating(false);
+                  }}
+                  onError={(error) => {
+                    console.error('Generation error:', error);
+                    setIsGenerating(false);
+                    setIsSubmitting(false);
+                  }}
+                  onScrapedContent={(content) => {
+                    try {
+                      const parsed = JSON.parse(content);
+                      setScrapedContent(prev => [...prev, {
+                        content: parsed.content || content,
+                        timestamp: new Date().toISOString(),
+                        url: parsed.url,
+                        title: parsed.title,
+                        status: parsed.status,
+                        statusCode: parsed.statusCode,
+                        sizeBytes: parsed.sizeBytes,
+                        noiseReductionRatio: parsed.noiseReductionRatio,
+                        errorMessage: parsed.errorMessage
+                      }]);
+                    } catch (e) {
+                      setScrapedContent(prev => [...prev, {
+                        content,
+                        timestamp: new Date().toISOString()
+                      }]);
+                    }
+                  }}
+                />
+              </div>
             </div>
-            <div className="rounded-xl overflow-hidden border border-border/50">
-              <SimpleTerminalLogger
-                ref={terminalLoggerRef}
-                isActive={isGenerating}
-                requestData={{
-                  prompt: watchedValues.prompt,
-                  numRows: watchedValues.numRows,
-                  useWebData: watchedValues.useWebData,
-                }}
-                onComplete={(result) => {
-                  setGenerationResult(result);
-                  setIsGenerating(false);
-                }}
-                onError={(error) => {
-                  console.error('Generation error:', error);
-                  setIsGenerating(false);
-                  setIsSubmitting(false);
-                }}
-                onScrapedContent={(content) => {
-                  setScrapedContent(prev => [...prev, {
-                    content,
-                    timestamp: new Date().toISOString()
-                  }]);
-                }}
-              />
+
+            <div className="space-y-2">
+              <span className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <Globe className="size-3.5 text-primary animate-pulse" />
+                Scraper Diagnostics ({scrapedContent.length} URLs)
+              </span>
+              <div className="glass-modern p-4 border border-border/50 rounded-xl max-h-[385px] overflow-y-auto custom-scrollbar space-y-3 bg-secondary/5">
+                {scrapedContent.length === 0 ? (
+                  <div className="h-48 flex flex-col items-center justify-center text-center text-muted-foreground p-6">
+                    <Globe className="size-8 text-muted-foreground/30 mb-3 animate-pulse" />
+                    <p className="text-xs font-bold uppercase tracking-wider">Scraper Standby</p>
+                    <p className="text-[10px] text-muted-foreground/75 mt-1">Live crawlers will populate diagnostic statuses here.</p>
+                  </div>
+                ) : (
+                  scrapedContent.map((sc, index) => {
+                    const isSuccess = sc.status === 'success';
+                    const displayTitle = sc.title || sc.url || 'Scraped URL';
+                    const displayUrl = sc.url || '';
+                    const sizeText = sc.sizeBytes ? `${(sc.sizeBytes / 1024).toFixed(1)} KB` : '0 KB';
+                    const pctNoise = sc.noiseReductionRatio || 0;
+
+                    return (
+                      <div key={index} className="p-3 rounded-lg bg-secondary/20 border border-border/30 hover:border-primary/20 transition-all space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="space-y-0.5 min-w-0 flex-1">
+                            <h4 className="text-[11px] font-black text-foreground truncate" title={displayTitle}>
+                              {displayTitle}
+                            </h4>
+                            <p className="text-[9px] text-muted-foreground truncate font-mono">
+                              {displayUrl}
+                            </p>
+                          </div>
+                          <Badge 
+                            variant="outline" 
+                            className={`text-[8px] font-black uppercase tracking-wider shrink-0 ${
+                              isSuccess 
+                                ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+                                : 'bg-destructive/10 text-destructive border-destructive/20'
+                            }`}
+                          >
+                            {isSuccess ? `${sc.statusCode || 200} OK` : `${sc.statusCode || 500} ERR`}
+                          </Badge>
+                        </div>
+
+                        {isSuccess && (
+                          <div className="grid grid-cols-2 gap-2 pt-1.5 border-t border-border/10">
+                            <div>
+                              <span className="text-[8px] font-black uppercase text-muted-foreground/60 tracking-wider">Size</span>
+                              <p className="text-[10px] font-black text-foreground">{sizeText}</p>
+                            </div>
+                            <div>
+                              <span className="text-[8px] font-black uppercase text-muted-foreground/60 tracking-wider">Noise Reduced</span>
+                              <div className="flex items-center gap-1">
+                                <p className="text-[10px] font-black text-foreground">{pctNoise}%</p>
+                                <div className="flex-1 h-1 bg-secondary/50 rounded-full overflow-hidden">
+                                  <div className="h-full bg-primary" style={{ width: `${pctNoise}%` }} />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {!isSuccess && sc.errorMessage && (
+                          <p className="text-[9px] font-bold text-destructive/80 italic leading-relaxed pt-1.5 border-t border-border/10">
+                            {sc.errorMessage}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </div>
           </div>
         )}

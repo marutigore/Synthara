@@ -846,22 +846,19 @@ function generateFallbackUrls(userQuery: string, maxUrls: number): Array<{
 
   // Add generic search URLs if we don't have enough
   if (urls.length < maxUrls) {
+    const cleanTerm = userQuery.replace(/[^a-zA-Z0-9\s]/g, '').trim().replace(/\s+/g, '_');
     urls.push({
-      url: 'https://www.google.com/search?q=' + encodeURIComponent(userQuery),
-      title: 'Google Search Results',
-      snippet: `Search results for: ${userQuery}`,
-      relevanceScore: 0.7,
-      source: 'google.com'
+      url: `https://en.wikipedia.org/wiki/${cleanTerm}`,
+      title: `${userQuery} - Wikipedia`,
+      snippet: `Wikipedia article containing encyclopedic information for ${userQuery}`,
+      relevanceScore: 0.8,
+      source: 'wikipedia.org'
     });
-  }
-
-  // Add Wikipedia for general information
-  if (urls.length < maxUrls) {
     urls.push({
-      url: 'https://en.wikipedia.org/wiki/Main_Page',
-      title: 'Wikipedia',
-      snippet: 'Free encyclopedia with comprehensive information',
-      relevanceScore: 0.6,
+      url: `https://en.wikipedia.org/wiki/Category:${cleanTerm}`,
+      title: `Category:${userQuery} - Wikipedia`,
+      snippet: `Wikipedia directory listing for ${userQuery}`,
+      relevanceScore: 0.75,
       source: 'wikipedia.org'
     });
   }

@@ -257,3 +257,30 @@ export async function getDatasetById(datasetId: string): Promise<(SavedDataset &
     return null;
   }
 }
+
+export async function updateDataset(
+  datasetId: string,
+  dataCsv: string,
+  schemaJson: Array<{ name: string; type: string }>,
+  numRows: number
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { supabase, user } = await getSupabaseUserClient();
+    const { error } = await supabase
+      .from('generated_datasets')
+      .update({
+        data_csv: dataCsv,
+        schema_json: schemaJson,
+        num_rows: numRows,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', datasetId)
+      .eq('user_id', user.id);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (err: any) {
+    console.error('Error updating dataset:', err.message);
+    return { success: false, error: err.message };
+  }
+}

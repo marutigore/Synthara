@@ -72,6 +72,14 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const geminiKey = request.headers.get('x-gemini-key');
+  const serpapiKey = request.headers.get('x-serpapi-key');
+  if (geminiKey) {
+    process.env.GOOGLE_GEMINI_API_KEY = geminiKey;
+  }
+  if (serpapiKey) {
+    process.env.SERPAPI_KEY = serpapiKey;
+  }
   const body = await request.json();
   const { prompt, numRows, useWebData, refinedSearchQuery, sessionId: incomingSessionId } = body;
 

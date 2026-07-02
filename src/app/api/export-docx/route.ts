@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     const filename = `${String(datasetName).replace(/[^a-z0-9]/gi, '_').toLowerCase()}_analysis_report.docx`;
 
-    return new Response(buffer, {
+    return new Response(buffer as any, {
       status: 200,
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',

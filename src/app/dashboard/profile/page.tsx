@@ -46,6 +46,22 @@ export default function ProfilePage() {
 
   const [apiKeys, setApiKeys] = useState<any[]>([]); // API Keys will be loaded from real source
 
+  const [localGeminiKey, setLocalGeminiKey] = useState('');
+  const [localSerpapiKey, setLocalSerpapiKey] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setLocalGeminiKey(localStorage.getItem('synthara_gemini_key') || '');
+      setLocalSerpapiKey(localStorage.getItem('synthara_serpapi_key') || '');
+    }
+  }, []);
+
+  const handleSaveExternalKeys = () => {
+    localStorage.setItem('synthara_gemini_key', localGeminiKey);
+    localStorage.setItem('synthara_serpapi_key', localSerpapiKey);
+    toast({ title: "Keys Saved", description: "Your external API keys have been saved in browser storage." });
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       if (!supabase) return;
@@ -358,6 +374,48 @@ export default function ProfilePage() {
               </CardContent>
               <CardFooter className="border-t pt-6">
                 <Button size="lg" onClick={() => toast({title: "Password Changed", description: "Your password has been updated.", variant: "default"})}><RefreshCcw className="mr-2 h-5 w-5"/>Change Password</Button>
+              </CardFooter>
+            </Card>
+
+            <Card className="shadow-xl">
+              <CardHeader>
+                <CardTitle className="font-headline text-2xl flex items-center">
+                  <KeyRound className="mr-2.5 text-primary"/> Integration API Keys
+                </CardTitle>
+                <CardDescription className="text-md mt-1">
+                  Configure keys for external API services used by the Synthara scraper and generation engine.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="gemini-key" className="font-bold">Google Gemini API Key</Label>
+                  <Input
+                    id="gemini-key"
+                    type="password"
+                    placeholder="AIzaSy..."
+                    value={localGeminiKey}
+                    onChange={(e) => setLocalGeminiKey(e.target.value)}
+                    className="font-mono bg-secondary/20"
+                  />
+                  <p className="text-xs text-muted-foreground">Used for AI classification, refinement, and prompt enhancement.</p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="serpapi-key" className="font-bold">SerpAPI Key</Label>
+                  <Input
+                    id="serpapi-key"
+                    type="password"
+                    placeholder="Enter your SerpAPI key..."
+                    value={localSerpapiKey}
+                    onChange={(e) => setLocalSerpapiKey(e.target.value)}
+                    className="font-mono bg-secondary/20"
+                  />
+                  <p className="text-xs text-muted-foreground">Used to fetch search results from Google Search during live generation.</p>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end pt-2">
+                <Button onClick={handleSaveExternalKeys} size="lg" className="w-full sm:w-auto font-bold bg-primary text-primary-foreground shadow-md hover:scale-[1.01] active:scale-[0.99] transition-all">
+                  Save Keys
+                </Button>
               </CardFooter>
             </Card>
 
