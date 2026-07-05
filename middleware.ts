@@ -20,6 +20,14 @@ export async function middleware(request: NextRequest) {
     supabaseUrl,
     supabaseAnonKey,
     {
+      global: {
+        fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+          return fetch(input, {
+            ...init,
+            signal: AbortSignal.timeout(1500),
+          });
+        }
+      },
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value

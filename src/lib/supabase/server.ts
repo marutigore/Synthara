@@ -15,6 +15,14 @@ export async function createSupabaseServerClient() {
     url,
     anon,
     {
+      global: {
+        fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+          return fetch(input, {
+            ...init,
+            signal: AbortSignal.timeout(1500),
+          });
+        }
+      },
       cookies: {
         get(name: string) {
           return cookieStore.get(name)?.value;

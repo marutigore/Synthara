@@ -34,7 +34,20 @@ export function createSupabaseBrowserClient() {
   }
 
   try {
-    const client = createBrowserClient(supabaseUrl, supabaseAnonKey);
+    const client = createBrowserClient(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        global: {
+          fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+            return fetch(input, {
+              ...init,
+              signal: AbortSignal.timeout(1500),
+            });
+          }
+        }
+      }
+    );
     return client;
   } catch (e: any) {
     console.error("[Supabase Client] Error during Supabase client creation:", e);
