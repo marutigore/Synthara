@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { CheckCircle, Users, Code, Activity, School, Database, BarChart3, Zap, ShieldCheck, Settings2, ArrowRight, LogIn, Briefcase, Sparkles } from 'lucide-react';
+import { CheckCircle, Users, Code, Activity, School, Database, BarChart3, Zap, ShieldCheck, Settings2, ArrowRight, LogIn, Briefcase, Sparkles, Menu } from 'lucide-react';
 
 import { SyntharaLogo } from '@/components/icons/SyntharaLogo';
 import { Footer } from '@/components/layout/Footer';
@@ -103,8 +103,8 @@ export default async function HomePage() {
             )}
           </div>
 
-          {/* Mobile Navigation */}
-          <div className="flex md:hidden items-center space-x-2">
+          {/* Mobile Navigation Toggle via CSS Peer */}
+          <div className="flex md:hidden items-center space-x-3">
             {user ? (
               <Button size="sm" asChild>
                 <Link href="/dashboard">Dashboard</Link>
@@ -112,6 +112,33 @@ export default async function HomePage() {
             ) : (
               <Button size="sm" asChild>
                 <Link href="/auth">Start Free</Link>
+              </Button>
+            )}
+            
+            <label htmlFor="mobile-menu-toggle" className="cursor-pointer p-2 text-foreground/80 hover:text-foreground select-none">
+              <Menu className="h-5 w-5" />
+            </label>
+          </div>
+
+          <input type="checkbox" id="mobile-menu-toggle" className="peer hidden" />
+          
+          {/* Mobile Dropdown Panel */}
+          <div className="hidden peer-checked:flex md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-md border-b border-border/50 flex-col p-6 space-y-4 shadow-xl z-50 animate-in fade-in slide-in-from-top-4 duration-300">
+            <Link href="#features" className="text-sm font-semibold text-foreground/70 hover:text-foreground px-2 py-1 transition-colors">Platform</Link>
+            <Link href="#solutions" className="text-sm font-semibold text-foreground/70 hover:text-foreground px-2 py-1 transition-colors">Solutions</Link>
+            <Link href="#team" className="text-sm font-semibold text-foreground/70 hover:text-foreground px-2 py-1 transition-colors">Resources</Link>
+            <Link href="/help" className="text-sm font-semibold text-foreground/70 hover:text-foreground px-2 py-1 transition-colors">Customers</Link>
+            <Link href="#pricing" className="text-sm font-semibold text-foreground/70 hover:text-foreground px-2 py-1 transition-colors">Pricing</Link>
+            
+            <div className="h-px bg-border/50 my-2" />
+            
+            <Button variant="outline" asChild className="w-full justify-center">
+              <Link href="/help">Get Demo</Link>
+            </Button>
+            
+            {!user && (
+              <Button variant="ghost" asChild className="w-full justify-center">
+                <Link href="/auth">Sign In</Link>
               </Button>
             )}
           </div>
@@ -130,7 +157,7 @@ export default async function HomePage() {
 
           <div className="container-responsive relative z-10">
             <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-8 animate-bounce">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-8 animate-pulse">
                 <Sparkles className="w-3 h-3" />
                 <span>Next Generation AI Scraper</span>
               </div>

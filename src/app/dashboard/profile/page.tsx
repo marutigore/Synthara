@@ -215,7 +215,7 @@ export default function ProfilePage() {
         </TabsList>
 
         <TabsContent value="profile">
-          <Card>
+          <Card className="modern-card border-none shadow-sm hover:shadow-md transition-all">
             <CardHeader className="pb-4 sm:pb-6">
               <CardTitle className="font-headline text-lg sm:text-xl lg:text-2xl">Personal Information</CardTitle>
               <CardDescription className="text-sm sm:text-base">Update your personal details here. Click 'Edit Profile' to make changes.</CardDescription>
@@ -317,7 +317,7 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="preferences">
-          <Card>
+          <Card className="modern-card border-none shadow-sm hover:shadow-md transition-all">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Interface Preferences</CardTitle>
               <CardDescription className="text-md">Customize your platform experience.</CardDescription>
@@ -353,7 +353,7 @@ export default function ProfilePage() {
         
         <TabsContent value="security">
           <div className="space-y-8">
-            <Card>
+            <Card className="modern-card border-none shadow-sm hover:shadow-md transition-all">
               <CardHeader>
                 <CardTitle className="font-headline text-2xl">Password Management</CardTitle>
                 <CardDescription className="text-md">Change your account password regularly for better security.</CardDescription>
@@ -377,7 +377,7 @@ export default function ProfilePage() {
               </CardFooter>
             </Card>
 
-            <Card className="shadow-xl">
+            <Card className="modern-card border-none shadow-sm hover:shadow-md transition-all">
               <CardHeader>
                 <CardTitle className="font-headline text-2xl flex items-center">
                   <KeyRound className="mr-2.5 text-primary"/> Integration API Keys
@@ -419,7 +419,7 @@ export default function ProfilePage() {
               </CardFooter>
             </Card>
 
-            <Card className="shadow-xl">
+            <Card className="modern-card border-none shadow-sm hover:shadow-md transition-all">
               <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <CardTitle className="font-headline text-2xl flex items-center"><KeyRound className="mr-2.5 text-primary"/> API Keys</CardTitle>
@@ -468,7 +468,7 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
 
-             <Card className="border-destructive/50">
+             <Card className="modern-card border border-destructive/30 shadow-sm hover:shadow-md transition-all bg-destructive/5">
               <CardHeader>
                 <CardTitle className="font-headline text-2xl text-destructive flex items-center"><Trash2 className="mr-2.5"/>Delete Account</CardTitle>
                 <CardDescription className="text-md">Permanently delete your account and all associated data. This action cannot be undone.</CardDescription>
@@ -498,7 +498,7 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="notifications">
-          <Card>
+          <Card className="modern-card border-none shadow-sm hover:shadow-md transition-all">
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Notification Settings</CardTitle>
               <CardDescription className="text-md">Manage how you receive notifications from Synthara.</CardDescription>

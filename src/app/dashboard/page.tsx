@@ -202,7 +202,7 @@ export default async function DashboardPage() {
               </div>
 
               <Button className="w-full h-11 bg-primary shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all font-bold text-[10px] uppercase tracking-widest rounded-xl">
-                Execute Context Repair
+                Repair Dataset Schema
               </Button>
             </div>
           </div>

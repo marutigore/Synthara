@@ -81,7 +81,7 @@ export function AIInsights({ data, profile, aiInsights, className, view = 'all' 
       <div className={className}>
         <div className="flex items-center gap-3 p-4 rounded-xl bg-secondary/20 border border-border/30">
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
-          <span className="text-sm font-medium">Synthesizing intelligence scope...</span>
+          <span className="text-sm font-medium">Analyzing dataset features...</span>
         </div>
       </div>
     );

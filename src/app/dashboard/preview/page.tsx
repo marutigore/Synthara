@@ -237,16 +237,16 @@ function DataPreviewContent() {
                 <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600">
                   <DatabaseZap className="h-4 w-4" />
                 </div>
-                <CardTitle className="text-lg font-bold tracking-tight">Intelligence Repository</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight">Dataset Library</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="px-6 pb-6 space-y-4">
               <div className="space-y-3">
-                <Label className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/70">Select Protocol</Label>
+                <Label className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/70">Select Dataset</Label>
                 {isLoadingList ? (
                   <div className="flex items-center gap-2 text-xs text-muted-foreground h-11">
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    Accessing records...
+                    Loading datasets...
                   </div>
                 ) : (
                   <div className="flex flex-col sm:flex-row gap-4">
@@ -294,7 +294,7 @@ function DataPreviewContent() {
                     <div className="absolute inset-0 border-4 border-primary/20 rounded-full" />
                     <div className="absolute inset-0 border-4 border-t-primary rounded-full animate-spin" />
                   </div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.4em]">Intercepting Data Stems...</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.4em]">Loading Dataset Preview...</p>
                 </div>
               </div>
             ) : loadedDataset ? (

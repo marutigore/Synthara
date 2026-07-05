@@ -432,10 +432,10 @@ export default function DataVisualizationPage() {
                 <div className="flex-1 modern-card border-none shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden flex flex-col bg-background/40 backdrop-blur-xl group-hover:bg-background/60 transition-all duration-700">
                   <div className="px-8 py-6 border-b border-border/5 flex items-center justify-between bg-muted/5 group-hover:bg-muted/10 transition-colors">
                     <div className="space-y-1.5">
-                      <h3 className="font-black text-lg text-foreground tracking-tight uppercase group-hover:text-primary transition-colors duration-500">{spec.title}</h3>
+                      <h3 className="font-bold text-lg text-foreground tracking-tight uppercase group-hover:text-primary transition-colors duration-500">{spec.title}</h3>
                       <div className="flex items-center gap-3">
                         <div className="size-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">{spec.type} ANALYTICS SEQUENCE</span>
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60">{spec.type} Chart</span>
                       </div>
                     </div>
                     <div className="flex gap-2">

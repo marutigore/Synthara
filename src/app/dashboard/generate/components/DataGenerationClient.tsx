@@ -811,7 +811,7 @@ export function DataGenerationClient() {
             <div className="p-2.5 rounded-xl bg-primary/10 text-primary">
               <Settings2 className="h-4 w-4" />
             </div>
-            <CardTitle className="text-xl font-bold tracking-tight">Synthesis Protocol</CardTitle>
+            <CardTitle className="text-xl font-bold tracking-tight">AI Generation Model</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="px-6 pb-6">
@@ -820,7 +820,7 @@ export function DataGenerationClient() {
               {/* Left Column in Form: Name & Scope */}
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <Label htmlFor="datasetName" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70">Dataset Identity</Label>
+                  <Label htmlFor="datasetName" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70">Dataset Name</Label>
                   <Input
                     id="datasetName"
                     placeholder="e.g., Global Financial Matrix 2025"
@@ -872,7 +872,7 @@ export function DataGenerationClient() {
               {/* Middle & Right Column: Prompt / Intelligence Scope */}
               <div className="lg:col-span-2 space-y-3">
                 <div className="flex justify-between items-center px-1">
-                  <Label htmlFor="prompt" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70">Intelligence Scope</Label>
+                  <Label htmlFor="prompt" className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70">Prompt / Instructions</Label>
                   <Button
                     type="button"
                     variant="ghost"
@@ -882,13 +882,13 @@ export function DataGenerationClient() {
                     className="h-8 px-4 text-[10px] text-primary font-black uppercase tracking-widest hover:bg-primary/10 rounded-lg transition-all"
                   >
                     {isEnhancing ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : <Wand2 className="h-3 w-3 mr-2" />}
-                    Optimise Engine
+                    Enhance Prompt
                   </Button>
                 </div>
                 <div className="relative group">
                   <Textarea
                     id="prompt"
-                    placeholder="Describe the architectural metadata and domain patterns you require..."
+                    placeholder="Describe the dataset you want to generate (e.g. e-commerce orders, customer feedback, financial matrix 2025)..."
                     className="min-h-[220px] text-base leading-relaxed resize-none rounded-2xl bg-secondary/20 border-border/50 focus:ring-primary/20 transition-all scrollbar-hide p-6 font-medium"
                     {...form.register('prompt')}
                     disabled={isGenerating}
@@ -912,9 +912,9 @@ export function DataGenerationClient() {
                 className="flex-1 h-14 rounded-2xl text-base font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition-all bg-primary"
               >
                 {isGenerating ? (
-                  <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Forge Active</>
+                  <><Loader2 className="mr-3 h-5 w-5 animate-spin" /> Generating Dataset...</>
                 ) : (
-                  <><Play className="mr-3 h-5 w-5 fill-current" /> Initiate Data Flow</>
+                  <><Play className="mr-3 h-5 w-5 fill-current" /> Generate Dataset</>
                 )}
               </Button>
               <Button
@@ -1127,7 +1127,7 @@ export function DataGenerationClient() {
                     </Button>
                     <Button onClick={handleSaveDataset} disabled={isSaving} className="h-12 px-8 rounded-xl font-black text-xs uppercase tracking-widest bg-emerald-600 hover:bg-emerald-500 text-white shadow-xl shadow-emerald-500/20 transition-all">
                       {isSaving ? <Loader2 className="mr-3 h-4 w-4 animate-spin" /> : <Save className="mr-3 h-4 w-4" />}
-                      Vault Records
+                      Save Dataset
                     </Button>
                   </div>
                 </div>
@@ -1136,8 +1136,8 @@ export function DataGenerationClient() {
                 <Tabs defaultValue="preview" className="w-full">
                   <div className="flex items-center justify-between border-b border-border/10 bg-muted/10 px-8">
                     <TabsList className="h-14 bg-transparent rounded-none p-0 gap-8">
-                      <TabsTrigger value="preview" className="text-xs font-black uppercase tracking-widest h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground bg-transparent transition-all px-0">Data Matrix</TabsTrigger>
-                      <TabsTrigger value="schema" className="text-xs font-black uppercase tracking-widest h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground bg-transparent transition-all px-0">Architecture Map</TabsTrigger>
+                      <TabsTrigger value="preview" className="text-xs font-black uppercase tracking-widest h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground bg-transparent transition-all px-0">Data Preview</TabsTrigger>
+                      <TabsTrigger value="schema" className="text-xs font-black uppercase tracking-widest h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground bg-transparent transition-all px-0">Schema View</TabsTrigger>
                       <TabsTrigger value="raw" className="text-xs font-black uppercase tracking-widest h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground bg-transparent transition-all px-0">Raw Protocol</TabsTrigger>
                     </TabsList>
 
