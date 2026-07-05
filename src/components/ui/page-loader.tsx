@@ -31,7 +31,7 @@ export function PageLoader({
             </div>
 
             <div className="space-y-2 text-center">
-                <p className="text-sm font-black uppercase tracking-[0.3em] text-primary/60 animate-pulse">
+                <p className="text-sm font-bold uppercase tracking-[0.3em] text-primary/60 animate-pulse">
                     {message}
                 </p>
                 <div className="h-1 w-48 bg-muted rounded-full overflow-hidden mx-auto">

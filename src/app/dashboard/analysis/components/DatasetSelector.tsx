@@ -237,7 +237,7 @@ export function DatasetSelector({ onDatasetSelect, onAnalysisStart, hideAnalyzeB
                     <SelectItem key={dataset.id} value={dataset.id}>
                       <div className="flex items-center justify-between w-full">
                         <span className="truncate">{dataset.dataset_name}</span>
-                        <Badge variant="secondary" className="ml-2 text-[8px] h-4">
+                        <Badge variant="secondary" className="ml-2 text-[11px] h-4">
                           {dataset.num_rows}
                         </Badge>
                       </div>
@@ -259,7 +259,7 @@ export function DatasetSelector({ onDatasetSelect, onAnalysisStart, hideAnalyzeB
               accept=".csv"
               onChange={handleFileUpload}
               disabled={isParsingFile}
-              className="h-9 rounded-lg bg-secondary/30 border-border/50 file:mr-3 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[9px] file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 text-[10px] transition-all cursor-pointer flex items-center"
+              className="h-9 rounded-lg bg-secondary/30 border-border/50 file:mr-3 file:py-0.5 file:px-2 file:rounded file:border-0 file:text-[11px] file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 text-[10px] transition-all cursor-pointer flex items-center"
             />
             {isParsingFile && (
               <div className="absolute right-2 top-1/2 -translate-y-1/2">
@@ -278,16 +278,16 @@ export function DatasetSelector({ onDatasetSelect, onAnalysisStart, hideAnalyzeB
               variant="ghost"
               size="sm"
               onClick={clearSelection}
-              className="h-5 px-1.5 text-[9px] font-bold text-destructive hover:bg-destructive/5"
+              className="h-5 px-1.5 text-[11px] font-bold text-destructive hover:bg-destructive/5"
             >
               <X className="h-3 w-3 mr-1" /> Clear
             </Button>
           </div>
 
           <div className="border border-border/30 rounded-lg overflow-hidden bg-secondary/5">
-            <div className="bg-secondary/10 px-3 py-1 text-[9px] font-bold text-muted-foreground/70 flex items-center justify-between border-b border-border/10">
+            <div className="bg-secondary/10 px-3 py-1 text-[11px] font-bold text-muted-foreground/70 flex items-center justify-between border-b border-border/10">
               <span className="flex items-center gap-1.5"><CheckCircle className="size-2.5 text-emerald-500" /> ACTIVE CONTEXT</span>
-              <span className="text-[8px]">{previewData.length > 0 ? Object.keys(previewData[0]).length : 0} FIELDS | {parsedData.length} RECORDS</span>
+              <span className="text-[11px]">{previewData.length > 0 ? Object.keys(previewData[0]).length : 0} FIELDS | {parsedData.length} RECORDS</span>
             </div>
             <ScrollArea className="h-32 w-full">
               <table className="w-full text-[10px]">

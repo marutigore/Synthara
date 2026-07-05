@@ -89,7 +89,7 @@ export default async function DashboardPage() {
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70 mb-0.5">{stat.label}</p>
               <div className="flex items-baseline gap-2">
                 <p className="text-xl font-bold text-foreground tracking-tight">{stat.value}</p>
-                <span className="text-[9px] font-semibold text-emerald-500/80 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">{stat.trend}</span>
+                <span className="text-[11px] font-semibold text-emerald-500/80 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">{stat.trend}</span>
               </div>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default async function DashboardPage() {
                 <div className="p-2 rounded-lg bg-background border shadow-sm text-foreground">
                   <FileText className="size-5" />
                 </div>
-                <Badge variant="secondary" className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5">
+                <Badge variant="secondary" className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5">
                   Latest Dataset
                 </Badge>
               </div>
@@ -139,11 +139,11 @@ export default async function DashboardPage() {
               {lastSavedDataset ? (
                 <div className="grid grid-cols-2 gap-3">
                   <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50">
-                    <p className="text-[9px] font-bold text-muted-foreground/60 uppercase">Entries</p>
+                    <p className="text-[11px] font-semibold text-muted-foreground/60 uppercase">Entries</p>
                     <p className="text-xs font-bold text-foreground">{lastSavedDataset.num_rows.toLocaleString()}</p>
                   </div>
                   <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50">
-                    <p className="text-[9px] font-bold text-muted-foreground/60 uppercase">Fields</p>
+                    <p className="text-[11px] font-semibold text-muted-foreground/60 uppercase">Fields</p>
                     <p className="text-xs font-bold text-foreground">
                       {Array.isArray(lastSavedDataset.schema_json) ? lastSavedDataset.schema_json.length : "0"}
                     </p>
@@ -175,9 +175,9 @@ export default async function DashboardPage() {
                   <div className="p-2 rounded-lg bg-primary/20 text-primary shadow-inner">
                     <Sparkles className="size-4 animate-pulse" />
                   </div>
-                  <h4 className="text-[11px] font-black text-primary uppercase tracking-widest">AI Intelligence</h4>
+                  <h4 className="text-[11px] font-bold text-primary uppercase tracking-widest">AI Intelligence</h4>
                 </div>
-                <Badge variant="outline" className="text-[9px] font-bold border-primary/30 text-primary bg-primary/5 uppercase px-2">
+                <Badge variant="outline" className="text-[11px] font-semibold border-primary/30 text-primary bg-primary/5 uppercase px-2">
                   High Impact
                 </Badge>
               </div>
@@ -191,7 +191,7 @@ export default async function DashboardPage() {
                 </p>
 
                 <div className="space-y-2 pt-2">
-                  <div className="flex justify-between items-center text-[10px] font-black text-primary/80 uppercase tracking-tighter">
+                  <div className="flex justify-between items-center text-[10px] font-semibold text-primary/80 uppercase tracking-tighter">
                     <span>Reliability Index</span>
                     <span>94%</span>
                   </div>
@@ -201,7 +201,7 @@ export default async function DashboardPage() {
                 </div>
               </div>
 
-              <Button className="w-full h-11 bg-primary shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all font-black text-[10px] uppercase tracking-widest rounded-xl">
+              <Button className="w-full h-11 bg-primary shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all font-bold text-[10px] uppercase tracking-widest rounded-xl">
                 Execute Context Repair
               </Button>
             </div>

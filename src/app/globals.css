@@ -367,3 +367,38 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(var(--muted-foreground) / 0.5);
 }
+
+/* Motion-safe utility: only animate when user hasn't requested reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .motion-safe-animate {
+    animation-play-state: running;
+  }
+}
+
+/* Accessibility: Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-bounce,
+  .animate-pulse,
+  .animate-spin,
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-in {
+    animation: none !important;
+  }
+
+  .hover\:-translate-y-2:hover,
+  .hover\:scale-105:hover,
+  .hover\:scale-\[1\.02\]:hover,
+  .active\:scale-\[0\.98\]:active {
+    transform: none !important;
+  }
+}

@@ -42,7 +42,7 @@ export function SidebarNav({ navItems, groupLabel }: SidebarNavProps) {
   return (
     <SidebarGroup className="px-2 py-0">
       {groupLabel && (
-        <SidebarGroupLabel className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 group-data-[collapsible=icon]:hidden">
+        <SidebarGroupLabel className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 group-data-[collapsible=icon]:hidden">
           {groupLabel}
         </SidebarGroupLabel>
       )}
@@ -66,7 +66,7 @@ export function SidebarNav({ navItems, groupLabel }: SidebarNavProps) {
                     className={cn(
                       "h-10 px-3 rounded-xl transition-all duration-300 group relative overflow-hidden",
                       isActive
-                        ? "bg-primary/10 text-primary font-black shadow-sm"
+                        ? "bg-primary/10 text-primary font-bold shadow-sm"
                         : "text-muted-foreground hover:bg-secondary/50 hover:text-foreground font-bold"
                     )}
                   >
@@ -85,7 +85,7 @@ export function SidebarNav({ navItems, groupLabel }: SidebarNavProps) {
                     )}
                     {item.label && (
                       <span className={cn(
-                        "ml-auto text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter group-data-[collapsible=icon]:hidden flex-shrink-0",
+                        "ml-auto text-[11px] px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter group-data-[collapsible=icon]:hidden flex-shrink-0",
                         isActive
                           ? "bg-primary/20 text-primary"
                           : "bg-secondary text-muted-foreground"

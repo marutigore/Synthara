@@ -281,7 +281,7 @@ export default async function HomePage() {
                     <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl group-hover:blur-2xl transition-all" />
                     <Avatar className="h-32 w-32 border-4 border-background shadow-xl">
                       <AvatarImage src="" alt={member.name} />
-                      <AvatarFallback className="bg-muted text-primary text-3xl font-black">
+                      <AvatarFallback className="bg-muted text-primary text-3xl font-bold">
                         {member.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>

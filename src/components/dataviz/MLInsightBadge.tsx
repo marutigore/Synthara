@@ -23,7 +23,7 @@ export function MLInsightBadge({ insight, className }: Props) {
 
                 <div className="space-y-1.5 pt-0.5">
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80">
+                        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary/80">
                             Intelligence Insight
                         </span>
                         <div className="size-1 rounded-full bg-primary/40" />

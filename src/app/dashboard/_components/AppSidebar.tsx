@@ -70,14 +70,14 @@ export function AppSidebar() {
                     </div>
                     <div className="flex flex-col gap-0.5 leading-none group-data-[collapsible=icon]:hidden">
                         <span className="font-headline text-lg font-black tracking-tight text-foreground">Synthara</span>
-                        <span className="text-[10px] uppercase tracking-widest font-black text-muted-foreground/60">Intelligence Hub</span>
+                        <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/60">Intelligence Hub</span>
                     </div>
                 </Link>
             </SidebarHeader>
 
             <SidebarContent className="px-2 py-4 gap-6 scrollbar-none">
                 <SidebarGroup>
-                    <SidebarGroupLabel className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 group-data-[collapsible=icon]:hidden">
+                    <SidebarGroupLabel className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 group-data-[collapsible=icon]:hidden">
                         Intelligence Core
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
@@ -86,7 +86,7 @@ export function AppSidebar() {
                 </SidebarGroup>
 
                 <SidebarGroup>
-                    <SidebarGroupLabel className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 group-data-[collapsible=icon]:hidden">
+                    <SidebarGroupLabel className="px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40 mb-3 group-data-[collapsible=icon]:hidden">
                         Operation History
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
@@ -103,10 +103,10 @@ export function AppSidebar() {
                 <div className="group-data-[collapsible=icon]:hidden">
                     <div className="px-4 py-3 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 flex items-center justify-between">
                         <div className="flex flex-col gap-1">
-                            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-primary/60">Current Tier</p>
-                            <p className="text-sm font-black text-foreground">Professional</p>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary/60">Current Tier</p>
+                            <p className="text-sm font-bold text-foreground">Professional</p>
                         </div>
-                        <div className="size-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-black text-[10px]">
+                        <div className="size-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-[10px]">
                             PRO
                         </div>
                     </div>
@@ -127,7 +127,7 @@ export function AppSidebar() {
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                                        <span className="truncate font-black text-foreground">
+                                        <span className="truncate font-bold text-foreground">
                                             {user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Strategist"}
                                         </span>
                                         <span className="truncate text-xs text-muted-foreground font-medium">

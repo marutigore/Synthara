@@ -44,7 +44,7 @@ export class ChartErrorBoundary extends Component<Props, State> {
                     <div className="p-4 rounded-full bg-destructive/10 text-destructive mb-4">
                         <AlertCircle className="size-8" />
                     </div>
-                    <h3 className="text-sm font-black text-foreground uppercase tracking-widest mb-2">
+                    <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-2">
                         Visualization Module Failure
                     </h3>
                     <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-tight max-w-xs mb-6">
@@ -54,14 +54,14 @@ export class ChartErrorBoundary extends Component<Props, State> {
                         variant="outline"
                         size="sm"
                         onClick={this.handleRetry}
-                        className="h-10 px-6 rounded-xl text-[10px] font-black uppercase tracking-widest border-destructive/20 text-destructive hover:bg-destructive/10"
+                        className="h-10 px-6 rounded-xl text-[10px] font-bold uppercase tracking-widest border-destructive/20 text-destructive hover:bg-destructive/10"
                     >
                         <RefreshCcw className="size-3 mr-2" />
                         Re-sync Module
                     </Button>
                     {process.env.NODE_ENV === 'development' && (
                         <div className="mt-8 p-4 rounded-xl bg-black/5 text-left w-full overflow-auto max-h-[150px]">
-                            <p className="text-[9px] font-mono text-destructive/70 whitespace-pre-wrap">
+                            <p className="text-[11px] font-mono text-destructive/70 whitespace-pre-wrap">
                                 {this.state.error?.message}
                             </p>
                         </div>

@@ -65,7 +65,7 @@ export function DashboardHeader() {
     <div className="flex items-center gap-2 sm:gap-4">
       <div className="hidden lg:flex items-center gap-1 group">
         <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500/80">System Online</span>
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-emerald-500/80">System Online</span>
       </div>
 
       <div className="h-4 w-px bg-border/40 mx-2 hidden sm:block" />
@@ -81,7 +81,7 @@ export function DashboardHeader() {
           <Button variant="ghost" size="icon" className="rounded-xl hover:bg-muted h-10 w-10 border border-transparent hover:border-border/50 transition-all">
             <Avatar className="h-8 w-8 rounded-lg border">
               <AvatarImage src={user?.user_metadata?.avatar_url || ""} alt={user?.email || "User Avatar"} />
-              <AvatarFallback className="text-xs bg-muted text-foreground font-black">{user?.email ? user.email.charAt(0).toUpperCase() : "U"}</AvatarFallback>
+              <AvatarFallback className="text-xs bg-muted text-foreground font-bold">{user?.email ? user.email.charAt(0).toUpperCase() : "U"}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
@@ -90,7 +90,7 @@ export function DashboardHeader() {
             <>
               <DropdownMenuLabel className="p-3">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-black leading-none text-foreground">{user.user_metadata?.full_name || user.email}</p>
+                  <p className="text-sm font-bold leading-none text-foreground">{user.user_metadata?.full_name || user.email}</p>
                   <p className="text-[10px] leading-none text-muted-foreground font-medium mt-1">
                     {user.email}
                   </p>

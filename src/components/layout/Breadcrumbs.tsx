@@ -32,7 +32,7 @@ export function Breadcrumbs() {
                     <React.Fragment key={path}>
                         <ChevronRight className="size-3.5 text-muted-foreground/30" />
                         {isLast ? (
-                            <span className="text-foreground tracking-tight font-black">{title}</span>
+                            <span className="text-foreground tracking-tight font-bold">{title}</span>
                         ) : (
                             <Link
                                 href={href}

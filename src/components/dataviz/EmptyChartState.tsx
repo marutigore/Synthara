@@ -18,7 +18,7 @@ export function EmptyChartState({ title, className }: Props) {
                 </div>
             </div>
 
-            <h3 className="text-sm font-black text-foreground uppercase tracking-widest mb-2">
+            <h3 className="text-sm font-bold text-foreground uppercase tracking-widest mb-2">
                 Data Sequence Not Found
             </h3>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-tight max-w-[200px]">

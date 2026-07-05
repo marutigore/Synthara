@@ -965,7 +965,7 @@ export function DataGenerationClient() {
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                   Operational Logs
                 </span>
-                <Button variant="ghost" size="sm" onClick={() => setShowTerminal(false)} className="h-5 text-[9px] font-bold hover:bg-secondary">HIDE LOGS</Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowTerminal(false)} className="h-5 text-[11px] font-bold hover:bg-secondary">HIDE LOGS</Button>
               </div>
               <div className="rounded-xl overflow-hidden border border-border/50">
                 <SimpleTerminalLogger
@@ -1034,16 +1034,16 @@ export function DataGenerationClient() {
                       <div key={index} className="p-3 rounded-lg bg-secondary/20 border border-border/30 hover:border-primary/20 transition-all space-y-2">
                         <div className="flex items-start justify-between gap-2">
                           <div className="space-y-0.5 min-w-0 flex-1">
-                            <h4 className="text-[11px] font-black text-foreground truncate" title={displayTitle}>
+                            <h4 className="text-[11px] font-bold text-foreground truncate" title={displayTitle}>
                               {displayTitle}
                             </h4>
-                            <p className="text-[9px] text-muted-foreground truncate font-mono">
+                            <p className="text-[11px] text-muted-foreground truncate font-mono">
                               {displayUrl}
                             </p>
                           </div>
                           <Badge 
                             variant="outline" 
-                            className={`text-[8px] font-black uppercase tracking-wider shrink-0 ${
+                            className={`text-[11px] font-bold uppercase tracking-wider shrink-0 ${
                               isSuccess 
                                 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
                                 : 'bg-destructive/10 text-destructive border-destructive/20'
@@ -1056,13 +1056,13 @@ export function DataGenerationClient() {
                         {isSuccess && (
                           <div className="grid grid-cols-2 gap-2 pt-1.5 border-t border-border/10">
                             <div>
-                              <span className="text-[8px] font-black uppercase text-muted-foreground/60 tracking-wider">Size</span>
-                              <p className="text-[10px] font-black text-foreground">{sizeText}</p>
+                              <span className="text-[11px] font-semibold text-muted-foreground/60 tracking-wider">Size</span>
+                              <p className="text-[10px] font-bold text-foreground">{sizeText}</p>
                             </div>
                             <div>
-                              <span className="text-[8px] font-black uppercase text-muted-foreground/60 tracking-wider">Noise Reduced</span>
+                              <span className="text-[11px] font-semibold text-muted-foreground/60 tracking-wider">Noise Reduced</span>
                               <div className="flex items-center gap-1">
-                                <p className="text-[10px] font-black text-foreground">{pctNoise}%</p>
+                                <p className="text-[10px] font-bold text-foreground">{pctNoise}%</p>
                                 <div className="flex-1 h-1 bg-secondary/50 rounded-full overflow-hidden">
                                   <div className="h-full bg-primary" style={{ width: `${pctNoise}%` }} />
                                 </div>
@@ -1072,7 +1072,7 @@ export function DataGenerationClient() {
                         )}
 
                         {!isSuccess && sc.errorMessage && (
-                          <p className="text-[9px] font-bold text-destructive/80 italic leading-relaxed pt-1.5 border-t border-border/10">
+                          <p className="text-[11px] font-bold text-destructive/80 italic leading-relaxed pt-1.5 border-t border-border/10">
                             {sc.errorMessage}
                           </p>
                         )}

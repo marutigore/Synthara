@@ -858,12 +858,12 @@ export function ModelTrainingClient() {
             ].map((item, i) => (
               <div key={i} className="flex flex-col gap-1.5 group">
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black font-mono text-primary/40 group-hover:text-primary transition-colors">{item.step}</span>
+                  <span className="text-[10px] font-bold font-mono text-primary/40 group-hover:text-primary transition-colors">{item.step}</span>
                   <div className="h-px flex-1 bg-border/30" />
                 </div>
                 <div className="flex items-center gap-1.5">
                   <item.icon className="size-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground/80 group-hover:text-foreground">{item.label}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/80 group-hover:text-foreground">{item.label}</span>
                 </div>
               </div>
             ))}
@@ -1059,7 +1059,7 @@ export function ModelTrainingClient() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className={`size-1.5 rounded-full ${isTraining ? 'bg-emerald-500 animate-pulse' : 'bg-muted-foreground/30'}`} />
-                  <span className="text-[9px] font-bold text-muted-foreground uppercase">{isTraining ? 'Training...' : 'Standby'}</span>
+                  <span className="text-[11px] font-bold text-muted-foreground uppercase">{isTraining ? 'Training...' : 'Standby'}</span>
                 </div>
               </div>
 
@@ -1079,12 +1079,12 @@ export function ModelTrainingClient() {
                           {metrics ? (
                             Object.entries(metrics).map(([k, v]) => (
                               <div key={k} className="p-3 rounded-lg bg-secondary/50 border border-border/50 flex-1 min-w-[100px]">
-                                <p className="text-[9px] font-bold text-muted-foreground uppercase mb-0.5">{k}</p>
+                                <p className="text-[11px] font-bold text-muted-foreground uppercase mb-0.5">{k}</p>
                                 <p className="text-md font-bold text-foreground">{v}</p>
                               </div>
                             ))
                           ) : (
-                            <div className="p-3 rounded-lg border border-dashed text-[9px] font-bold text-muted-foreground/30 uppercase italic text-center w-full">Computation in progress...</div>
+                            <div className="p-3 rounded-lg border border-dashed text-[11px] font-bold text-muted-foreground/30 uppercase italic text-center w-full">Computation in progress...</div>
                           )}
                         </div>
                       </div>
@@ -1092,7 +1092,7 @@ export function ModelTrainingClient() {
                         <div className="px-3 py-1.5 border-b border-border/10 bg-muted/10">
                           <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-wider">Epoch Lifecycle</p>
                         </div>
-                        <ScrollArea className="h-[100px] p-3 font-mono text-[9px] leading-relaxed">
+                        <ScrollArea className="h-[100px] p-3 font-mono text-[11px] leading-relaxed">
                           {epochEvents.map((e, idx) => (
                             <div key={idx} className="flex gap-3 border-b border-border/5 py-1">
                               <span className="text-primary/70 shrink-0">[{new Date(e.ts).toLocaleTimeString()}]</span>
@@ -1117,7 +1117,7 @@ export function ModelTrainingClient() {
                     <div className="flex justify-center flex-wrap gap-3 pt-2">
                       {Object.entries(metrics).map(([k, v]) => (
                         <div key={k} className="px-6 py-3 rounded-xl bg-white/5 border border-emerald-500/20">
-                          <p className="text-[9px] font-bold text-emerald-600/70 uppercase mb-0.5">{k}</p>
+                          <p className="text-[11px] font-bold text-emerald-600/70 uppercase mb-0.5">{k}</p>
                           <p className="text-xl font-bold text-foreground tracking-tight">{v}</p>
                         </div>
                       ))}
@@ -1179,7 +1179,7 @@ export function ModelTrainingClient() {
                 <div className="space-y-2">
                   <h4 className="text-[10px] font-bold text-primary uppercase tracking-wider">Architecture</h4>
                   <div className="p-4 rounded-xl bg-secondary/30 space-y-2 border border-border/50">
-                    <div className="flex justify-between items-center"><span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Mode</span><Badge variant="secondary" className="font-bold text-primary uppercase h-5 text-[9px]">{plan.modelType}</Badge></div>
+                    <div className="flex justify-between items-center"><span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Mode</span><Badge variant="secondary" className="font-bold text-primary uppercase h-5 text-[11px]">{plan.modelType}</Badge></div>
                     <div className="flex justify-between items-center"><span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Target</span><span className="text-[10px] font-bold">{plan.targetColumn}</span></div>
                     <div className="flex justify-between items-center"><span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Epochs</span><span className="text-[10px] font-bold">{plan.params.epochs}</span></div>
                   </div>

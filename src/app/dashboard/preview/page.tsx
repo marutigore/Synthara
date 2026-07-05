@@ -214,7 +214,7 @@ function DataPreviewContent() {
           <div className="flex gap-3 relative z-10">
             <Button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="h-14 px-6 rounded-xl font-black bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all flex items-center gap-2"
+              className="h-14 px-6 rounded-xl font-bold bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-all flex items-center gap-2"
               disabled={!loadedDataset}
             >
               <Sparkles className="size-4 animate-pulse" /> AI Refine
@@ -222,7 +222,7 @@ function DataPreviewContent() {
             <Button
               disabled={!loadedDataset || !loadedDataset.data_csv || isLoadingDataset}
               onClick={handleDownloadCsv}
-              className="h-14 px-8 rounded-xl font-black bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="h-14 px-8 rounded-xl font-bold bg-primary text-primary-foreground shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               <Download className="mr-3 h-5 w-5" /> Download CSV
             </Button>
@@ -242,7 +242,7 @@ function DataPreviewContent() {
             </CardHeader>
             <CardContent className="px-6 pb-6 space-y-4">
               <div className="space-y-3">
-                <Label className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/70">Select Protocol</Label>
+                <Label className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground/70">Select Protocol</Label>
                 {isLoadingList ? (
                   <div className="flex items-center gap-2 text-xs text-muted-foreground h-11">
                     <Loader2 className="h-3 w-3 animate-spin" />
@@ -276,7 +276,7 @@ function DataPreviewContent() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <Button asChild variant="secondary" className="h-11 px-6 rounded-xl font-black text-xs uppercase tracking-widest border border-primary/20 bg-primary/5 text-primary">
+                    <Button asChild variant="secondary" className="h-11 px-6 rounded-xl font-bold text-xs uppercase tracking-widest border border-primary/20 bg-primary/5 text-primary">
                       <Link href="/dashboard/generate">Generate New</Link>
                     </Button>
                   </div>
@@ -294,7 +294,7 @@ function DataPreviewContent() {
                     <div className="absolute inset-0 border-4 border-primary/20 rounded-full" />
                     <div className="absolute inset-0 border-4 border-t-primary rounded-full animate-spin" />
                   </div>
-                  <p className="text-xs font-black text-muted-foreground uppercase tracking-[0.4em]">Intercepting Data Stems...</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.4em]">Intercepting Data Stems...</p>
                 </div>
               </div>
             ) : loadedDataset ? (
@@ -312,7 +312,7 @@ function DataPreviewContent() {
                         <stat.icon className="size-4" />
                       </div>
                       <div>
-                        <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60">{stat.label}</p>
+                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground/60">{stat.label}</p>
                         <p className="text-2xl font-black text-foreground tracking-tight">{stat.value}</p>
                       </div>
                     </div>
@@ -333,7 +333,7 @@ function DataPreviewContent() {
 
                     <div className="hidden sm:flex items-center gap-2 p-2 px-4 rounded-xl bg-secondary/20 border border-border/30">
                       <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Interactive Grid Mode Active</span>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Interactive Grid Mode Active</span>
                     </div>
                   </div>
 
@@ -342,7 +342,7 @@ function DataPreviewContent() {
                       <div className="px-8 py-4 border-b border-border/30 bg-muted/20 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <FileText className="size-3.5 text-primary" />
-                          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Dataset Workspace</h3>
+                          <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Dataset Workspace</h3>
                         </div>
                         <p className="text-xs font-bold text-muted-foreground uppercase tracking-tight">
                           Manifesting first 20 nodes
@@ -355,8 +355,8 @@ function DataPreviewContent() {
                               {loadedSchema.map((col: { name: string, type: string }) => (
                                 <TableHead key={col.name} className="px-6 py-4 h-14 whitespace-nowrap">
                                   <div className="flex items-center gap-2">
-                                    <span className="text-xs font-black uppercase tracking-[0.1em] text-foreground">{col.name}</span>
-                                    <Badge variant="outline" className="text-[10px] font-black uppercase border-primary/20 text-primary h-5 px-1.5 bg-primary/5">{col.type}</Badge>
+                                    <span className="text-xs font-bold uppercase tracking-[0.1em] text-foreground">{col.name}</span>
+                                    <Badge variant="outline" className="text-[10px] font-semibold uppercase border-primary/20 text-primary h-5 px-1.5 bg-primary/5">{col.type}</Badge>
                                   </div>
                                 </TableHead>
                               ))}
@@ -413,7 +413,7 @@ function DataPreviewContent() {
                       </div>
                       {loadedDataRows.length > 20 && (
                         <div className="p-6 border-t border-border/10 bg-muted/5 flex justify-center">
-                          <Button variant="ghost" className="h-12 w-full text-[10px] font-black uppercase tracking-widest hover:bg-secondary/50 rounded-xl" onClick={handleDownloadCsv}>
+                          <Button variant="ghost" className="h-12 w-full text-[10px] font-bold uppercase tracking-widest hover:bg-secondary/50 rounded-xl" onClick={handleDownloadCsv}>
                             Download full dataset to view all {loadedDataRows.length.toLocaleString()} nodes
                           </Button>
                         </div>
@@ -428,7 +428,7 @@ function DataPreviewContent() {
                           <div className="p-2 rounded-xl bg-blue-500/10 text-blue-500">
                             <Info className="size-3.5" />
                           </div>
-                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Technical Specs</h4>
+                          <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Technical Specs</h4>
                         </div>
                         <div className="space-y-4">
                           {[
@@ -438,8 +438,8 @@ function DataPreviewContent() {
                             { label: "Storage", value: "Verified" }
                           ].map((item, idx) => (
                             <div key={idx} className="flex justify-between items-center border-b border-border/10 pb-3">
-                              <span className="text-xs font-black text-muted-foreground/60 uppercase tracking-tight">{item.label}</span>
-                              <span className="text-sm font-black text-foreground">{item.value}</span>
+                              <span className="text-xs font-semibold text-muted-foreground/60 uppercase tracking-tight">{item.label}</span>
+                              <span className="text-sm font-bold text-foreground">{item.value}</span>
                             </div>
                           ))}
                         </div>
@@ -449,14 +449,14 @@ function DataPreviewContent() {
                           <div className="p-2 rounded-xl bg-purple-500/10 text-purple-500">
                             <Sparkles className="size-3.5" />
                           </div>
-                          <h4 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">AI Synopsis</h4>
+                          <h4 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">AI Synopsis</h4>
                         </div>
                         <div className="p-6 rounded-2xl bg-secondary/30 border border-border/30">
                           <p className="text-sm leading-relaxed text-muted-foreground font-bold italic">
                             "{loadedDataset.feedback || "Professional assessment suggests consistent data patterns with standard variance across all identified columns."}"
                           </p>
                         </div>
-                        <Button asChild variant="outline" className="w-full h-11 rounded-xl text-xs font-black uppercase tracking-widest border-border/50 shadow-sm hover:shadow-md transition-all">
+                        <Button asChild variant="outline" className="w-full h-11 rounded-xl text-xs font-bold uppercase tracking-widest border-border/50 shadow-sm hover:shadow-md transition-all">
                           <Link href={`/dashboard/analysis?datasetId=${loadedDataset.id}`}>Deep Analysis</Link>
                         </Button>
                       </div>
@@ -476,7 +476,7 @@ function DataPreviewContent() {
                       Select a dataset from the <span className="text-primary tracking-widest">Protocol Selector</span> above to manifest the data stream.
                     </p>
                   </div>
-                  <Button asChild variant="secondary" className="h-12 px-10 rounded-xl font-black text-xs uppercase tracking-widest border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all shadow-lg shadow-primary/5">
+                  <Button asChild variant="secondary" className="h-12 px-10 rounded-xl font-bold text-xs uppercase tracking-widest border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all shadow-lg shadow-primary/5">
                     <Link href="/dashboard/generate">Create New Protocol</Link>
                   </Button>
                 </div>
@@ -492,7 +492,7 @@ function DataPreviewContent() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="size-4 text-primary animate-pulse" />
-              <h3 className="text-sm font-black uppercase tracking-wider text-foreground">AI Refinement Panel</h3>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">AI Refinement Panel</h3>
             </div>
             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)}>
               <X className="size-4" />
@@ -501,7 +501,7 @@ function DataPreviewContent() {
           
           <div className="space-y-4">
             <div>
-              <Label className="text-xs font-black uppercase tracking-wider text-muted-foreground">Refinement Instructions</Label>
+              <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Refinement Instructions</Label>
               <textarea
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}

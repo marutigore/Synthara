@@ -374,7 +374,7 @@ export default function DataVisualizationPage() {
               </table>
             </div>
             <div className="flex justify-center">
-              <p className="text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.2em]">Viewing restricted sequence · 10 of {rows.length} rows</p>
+              <p className="text-[11px] font-semibold text-muted-foreground/40 uppercase tracking-[0.2em]">Viewing restricted sequence · 10 of {rows.length} rows</p>
             </div>
           </div>
         </Card>
@@ -382,7 +382,7 @@ export default function DataVisualizationPage() {
 
       {aiMeta?.aiUsed && (
         <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
-          <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Synthesis Report Active</p>
+          <p className="text-[10px] font-bold text-primary uppercase tracking-[0.2em]">Synthesis Report Active</p>
           <p className="text-[11px] leading-relaxed text-muted-foreground font-bold italic uppercase tracking-tight">
             Synthesized by <span className="text-foreground">{aiMeta.model || "Core AI"}</span>
           </p>

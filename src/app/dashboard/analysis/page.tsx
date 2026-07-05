@@ -571,7 +571,7 @@ export default function DataAnalysisPage() {
                   ].map((stat, i) => (
                     <div key={i} className="modern-card p-4 flex items-center justify-between group hover:border-primary/20 transition-all border-none shadow-sm">
                       <div className="space-y-0.5">
-                        <p className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground/50">{stat.label}</p>
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground/50">{stat.label}</p>
                         <p className="text-xl font-black text-foreground tracking-tight">{stat.value}</p>
                       </div>
                       <div className={`p-2.5 rounded-lg bg-secondary/50 ${stat.color} group-hover:scale-105 transition-transform`}>
