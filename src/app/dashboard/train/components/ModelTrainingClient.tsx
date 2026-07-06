@@ -41,6 +41,7 @@ export function ModelTrainingClient() {
   const [testSplit, setTestSplit] = useState<number>(0.2);
   const [epochs, setEpochs] = useState<number>(20);
   const [batchSize, setBatchSize] = useState<number>(32);
+  const [trainMode, setTrainMode] = useState<"client" | "server" | "auto">("client");
 
   const [isCleaning, setIsCleaning] = useState<boolean>(false);
   const [cleanedOnce, setCleanedOnce] = useState<boolean>(false);
@@ -693,9 +694,16 @@ export function ModelTrainingClient() {
       setBatchSize(p.params?.batchSize ?? batchSize);
       setEpochEvents((prev) => [...prev, { epoch: 0, progress: 0, message: "Plan ready. Starting training...", ts: new Date().toISOString() }]);
 
-      const ok = await doBackendTrain();
-      if (!ok) {
+      if (trainMode === "server") {
+        const ok = await doBackendTrain();
+        if (!ok) throw new Error("Server-side training failed");
+      } else if (trainMode === "client") {
         await doTrain();
+      } else {
+        const ok = await doBackendTrain();
+        if (!ok) {
+          await doTrain();
+        }
       }
     } catch (e: any) {
       setEpochEvents((prev) => [...prev, { epoch: 0, progress: 0, message: `Pipeline failed: ${e?.message || 'Unknown error'}`, ts: new Date().toISOString() }]);
@@ -827,12 +835,19 @@ export function ModelTrainingClient() {
     setBatchSize(plan.params?.batchSize ?? batchSize);
     setPlanDialogOpen(false);
     setTimeout(async () => {
-      const ok = await doBackendTrain();
-      if (!ok) {
+      if (trainMode === "server") {
+        const ok = await doBackendTrain();
+        if (!ok) toast({ title: "Failed", description: "Server training failed", variant: "destructive" });
+      } else if (trainMode === "client") {
         await doTrain();
+      } else {
+        const ok = await doBackendTrain();
+        if (!ok) {
+          await doTrain();
+        }
       }
     }, 0);
-  }, [plan, doBackendTrain, doTrain, target, modelType, features, testSplit, epochs, batchSize]);
+  }, [plan, doBackendTrain, doTrain, target, modelType, features, testSplit, epochs, batchSize, trainMode, toast]);
 
   return (
     <div className="space-y-6">
@@ -957,6 +972,22 @@ export function ModelTrainingClient() {
                       <div className="space-y-1.5">
                         <Label className="text-[10px] font-bold uppercase text-muted-foreground">Batch Size</Label>
                         <Input type="number" min={8} max={256} step={8} value={batchSize} className="h-9 rounded-lg bg-secondary/30 border-border/50 font-bold text-xs" onChange={(e) => setBatchSize(Math.min(256, Math.max(8, Number(e.target.value) || 32)))} />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1.5 col-span-2">
+                        <Label className="text-[10px] font-bold uppercase text-muted-foreground">Execution Environment</Label>
+                        <Select value={trainMode} onValueChange={(val) => setTrainMode(val as any)}>
+                          <SelectTrigger className="h-9 rounded-lg bg-secondary/30 border-border/50 font-bold text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="client">Client-Side (In-Browser TFJS)</SelectItem>
+                            <SelectItem value="server">Server-Side (Python Backend)</SelectItem>
+                            <SelectItem value="auto">Automatic Fallback</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </div>
