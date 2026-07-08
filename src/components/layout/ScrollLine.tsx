@@ -62,7 +62,7 @@ export function ScrollLine() {
 
         // Deterministically generate sparks along the drawn line to avoid jitter on scroll
         const tempSparks = [];
-        const count = 20; // 20 sparks distributed along the drawn line
+        const count = 55; // 55 sparks distributed along the drawn line
         const drawnLength = pathLength * scrollProgress;
         
         for (let i = 0; i < count; i++) {
