@@ -6,6 +6,7 @@ import { CheckCircle, Users, Code, Activity, School, Database, BarChart3, Zap, S
 
 import { SyntharaLogo } from '@/components/icons/SyntharaLogo';
 import { Footer } from '@/components/layout/Footer';
+import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
 
@@ -57,6 +58,7 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background relative">
+      <ScrollProgress />
 
       <header className="relative z-50 py-4 border-b bg-background">
         <nav className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -181,6 +183,124 @@ export default async function HomePage() {
                 <Button size="lg" variant="outline" asChild className="h-14 px-10 text-lg font-bold rounded-full border-2 hover:bg-secondary">
                   <Link href="/help">View Documentation</Link>
                 </Button>
+              </div>
+
+              {/* Interactive Hero Dashboard Mockup */}
+              <div className="relative mt-20 w-full rounded-2xl border border-border/40 bg-background/40 p-2 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.01] hover:shadow-primary/5 group animate-slide-up">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-purple-500/10 to-indigo-500/10 rounded-2xl blur-xl opacity-40 group-hover:opacity-60 transition duration-1000" />
+                <div className="relative bg-background/80 rounded-xl overflow-hidden border border-border/20">
+                  
+                  {/* Mock browser header */}
+                  <div className="flex items-center justify-between px-4 py-3 bg-muted/40 border-b border-border/20">
+                    <div className="flex gap-1.5">
+                      <div className="size-3 rounded-full bg-red-500/70" />
+                      <div className="size-3 rounded-full bg-yellow-500/70" />
+                      <div className="size-3 rounded-full bg-green-500/70" />
+                    </div>
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest font-mono bg-background/50 px-4 py-0.5 rounded-full border border-border/30">
+                      synthara-ai-engine-v2.0
+                    </div>
+                    <div className="w-12" />
+                  </div>
+
+                  {/* Mock Workspace Content */}
+                  <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    
+                    {/* Left Column: Scraping Control console */}
+                    <div className="space-y-4 md:col-span-1 border-r border-border/10 pr-6">
+                      <div className="space-y-1">
+                        <span className="text-[9px] font-bold text-primary uppercase tracking-widest">Synthesis Engine</span>
+                        <h4 className="font-bold text-sm text-foreground">Scraping Parameters</h4>
+                      </div>
+                      
+                      <div className="space-y-3 bg-secondary/20 p-3.5 rounded-lg border border-border/10">
+                        <div className="space-y-1">
+                          <span className="text-[8px] font-bold text-muted-foreground uppercase">Target Query</span>
+                          <div className="text-[10px] font-mono bg-background/80 px-2 py-1 rounded border border-border/20 text-foreground overflow-hidden text-ellipsis whitespace-nowrap">
+                            "Scrape luxury electric SUV specs 2026"
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-1">
+                          <span className="text-[8px] font-bold text-muted-foreground uppercase">AI Generation Model</span>
+                          <div className="text-[10px] font-bold bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20 w-fit">
+                            DeepSeek V3 (Scraper)
+                          </div>
+                        </div>
+
+                        <div className="space-y-1">
+                          <span className="text-[8px] font-bold text-muted-foreground uppercase">Status</span>
+                          <div className="flex items-center gap-2 text-[10px] text-emerald-500 font-bold">
+                            <span className="size-2 bg-emerald-500 rounded-full animate-pulse" />
+                            Active Data Flow
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mock Statistics Mini Grid */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="p-3 bg-secondary/15 rounded-lg border border-border/5 text-center">
+                          <div className="text-sm font-black text-foreground">1,420</div>
+                          <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">Scraped Rows</div>
+                        </div>
+                        <div className="p-3 bg-secondary/15 rounded-lg border border-border/5 text-center">
+                          <div className="text-sm font-black text-primary">99.4%</div>
+                          <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">Quality Score</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Columns: Raw Data Matrix Preview */}
+                    <div className="md:col-span-2 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Data Matrix Preview</h4>
+                        <span className="text-[9px] bg-emerald-500/10 text-emerald-500 font-bold px-2 py-0.5 rounded">Synced</span>
+                      </div>
+
+                      <div className="overflow-x-auto rounded-lg border border-border/20 bg-background/50">
+                        <table className="w-full text-left border-collapse text-[10px]">
+                          <thead>
+                            <tr className="bg-muted/30 border-b border-border/25 text-muted-foreground font-bold">
+                              <th className="p-2.5">Model Name</th>
+                              <th className="p-2.5">Range (EPA)</th>
+                              <th className="p-2.5">MSRP</th>
+                              <th className="p-2.5">Availability</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-border/10 font-medium">
+                            <tr>
+                              <td className="p-2.5 font-bold text-foreground">Lucid Gravity Dream</td>
+                              <td className="p-2.5 text-primary">440 mi</td>
+                              <td className="p-2.5">$94,900</td>
+                              <td className="p-2.5"><span className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 text-[9px] rounded font-bold">Active</span></td>
+                            </tr>
+                            <tr>
+                              <td className="p-2.5 font-bold text-foreground">Rivian R1S Gen 2</td>
+                              <td className="p-2.5 text-primary">410 mi</td>
+                              <td className="p-2.5">$75,900</td>
+                              <td className="p-2.5"><span className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 text-[9px] rounded font-bold">Active</span></td>
+                            </tr>
+                            <tr>
+                              <td className="p-2.5 font-bold text-foreground">Tesla Model X Plaid</td>
+                              <td className="p-2.5 text-primary">335 mi</td>
+                              <td className="p-2.5">$91,490</td>
+                              <td className="p-2.5"><span className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 text-[9px] rounded font-bold">Active</span></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Mock log feed */}
+                      <div className="bg-black/90 p-3 rounded-lg border border-border/10 font-mono text-[9px] text-zinc-400 space-y-1">
+                        <div className="text-zinc-500 flex justify-between"><span>LOG MONITOR</span><span>v2.0.0</span></div>
+                        <div className="text-emerald-500">[INFO] Initializing Crawl4AI browser session...</div>
+                        <div className="text-emerald-500">[INFO] Successfully scraped 3 domains on port 11235</div>
+                        <div className="text-indigo-400">[AI-MODEL] DeepSeek schema mapping generated successfully</div>
+                        <div className="text-zinc-500">_</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Trust Badge / Proof */}
