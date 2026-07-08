@@ -8,6 +8,7 @@ import { SyntharaLogo } from '@/components/icons/SyntharaLogo';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import { HeroSpotlight } from '@/components/layout/HeroSpotlight';
+import { ScrollLine } from '@/components/layout/ScrollLine';
 import { TextScramble } from '@/components/ui/TextScramble';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
@@ -62,6 +63,7 @@ export default async function HomePage() {
     <div className="flex flex-col min-h-screen bg-background relative">
       <ScrollProgress />
       <HeroSpotlight />
+      <ScrollLine />
 
       <header className="relative z-50 py-4 border-b bg-background">
         <nav className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
