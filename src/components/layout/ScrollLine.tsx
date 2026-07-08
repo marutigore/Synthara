@@ -43,7 +43,12 @@ export function ScrollLine() {
   `;
 
   const [pathLength, setPathLength] = useState(0);
-  const [lineSparks, setLineSparks] = useState<Array<{ x: number; y: number; r: number; delay: string; speed: string }>>([]);
+  const [lineSparks, setLineSparks] = useState<
+    Array<{ x: number; y: number; r: number; delay: string; speed: string; bright: boolean; tendril?: string }>
+  >([]);
+  const [starNodes, setStarNodes] = useState<
+    Array<{ x: number; y: number; delay: string }>
+  >([]);
 
   useEffect(() => {
     if (pathRef.current) {
@@ -64,32 +69,57 @@ export function ScrollLine() {
         const tempSparks = [];
         const count = 160; // 160 sparks distributed along the drawn line
         const drawnLength = pathLength * scrollProgress;
-        
+
         for (let i = 0; i < count; i++) {
           const lengthAtPoint = (i / (count - 1)) * drawnLength;
           if (lengthAtPoint > 0) {
             const pathPt = pathRef.current.getPointAtLength(lengthAtPoint);
             const seed = (i * 7919) % 360;
-            
+
             // Deterministically alternate left and right sides
             const isLeft = i % 2 === 0;
             const sideSign = isLeft ? -1 : 1;
-            
-            // Horizontal offset (dx): 5px to 35px on both sides of the line
-            const dx = sideSign * (5 + (seed % 31));
+
+            // Horizontal offset (dx): 5px to 45px on both sides of the line
+            const dx = sideSign * (5 + (seed % 41));
             // Vertical offset (dy): small drift (-8px to +8px) to keep them vertically aligned with path point
             const dy = ((seed * 7) % 17) - 8;
-            
+
+            // ~1 in 5 sparks is a larger "bright orb"; the rest are fine dust
+            const bright = seed % 5 === 0;
+            const sx = pathPt.x + dx;
+            const sy = pathPt.y + dy;
+
+            // ~1 in 3 sparks gets a jagged lightning tendril connecting it back to the line
+            let tendril: string | undefined;
+            if (seed % 3 === 0) {
+              const midX = pathPt.x + dx * (0.45 + ((seed * 3) % 10) * 0.02);
+              const midY = pathPt.y + dy * (0.45 + ((seed * 5) % 10) * 0.02) + (((seed * 11) % 9) - 4);
+              tendril = `M ${pathPt.x} ${pathPt.y} L ${midX} ${midY} L ${sx} ${sy}`;
+            }
+
             tempSparks.push({
-              x: pathPt.x + dx,
-              y: pathPt.y + dy,
-              r: 1.2 + (seed % 4) * 0.9, // size 1.2px to 4.8px (mix of small and large)
+              x: sx,
+              y: sy,
+              r: bright ? 3 + (seed % 4) * 0.8 : 1.2 + (seed % 4) * 0.5,
               delay: `${(seed % 5) * 0.4}s`,
               speed: `${1.2 + (seed % 3) * 0.4}s`,
+              bright,
+              tendril,
             });
           }
         }
         setLineSparks(tempSparks);
+
+        // Periodic bright star-flare nodes along the line itself (spaced by arc length)
+        const tempStars = [];
+        const nodeSpacing = 190; // px of path length between flares
+        for (let len = nodeSpacing; len <= drawnLength; len += nodeSpacing) {
+          const p = pathRef.current.getPointAtLength(len);
+          const seed = Math.floor(len) % 360;
+          tempStars.push({ x: p.x, y: p.y, delay: `${(seed % 5) * 0.3}s` });
+        }
+        setStarNodes(tempStars);
       } catch (e) {}
     }
   }, [scrollProgress, pathLength]);
@@ -167,7 +197,52 @@ export function ScrollLine() {
           />
         ))}
 
-        {/* Shimmering spark dots along the drawn line */}
+        {/* Jagged lightning tendrils connecting sparks back to the line */}
+        {lineSparks
+          .filter((s) => s.tendril)
+          .map((spark, idx) => (
+            <path
+              key={`tendril-${idx}`}
+              d={spark.tendril}
+              fill="none"
+              stroke="#8fc3ff"
+              strokeWidth="0.75"
+              className="animate-pulse"
+              style={{
+                animationDelay: spark.delay,
+                animationDuration: spark.speed,
+                opacity: 0.55,
+                filter: "drop-shadow(0px 0px 2px rgba(139, 195, 255, 0.8))",
+              }}
+            />
+          ))}
+
+        {/* Periodic star-flare nodes along the drawn line */}
+        {starNodes.map((node, idx) => (
+          <g
+            key={`star-${idx}`}
+            className="animate-pulse"
+            style={{ animationDelay: node.delay, animationDuration: "2.4s" }}
+          >
+            <path
+              d={`M ${node.x} ${node.y - 10} L ${node.x} ${node.y + 10} M ${node.x - 10} ${node.y} L ${node.x + 10} ${node.y}`}
+              stroke="#ffffff"
+              strokeWidth="0.9"
+              style={{ filter: "drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.9))" }}
+            />
+            <circle
+              cx={node.x}
+              cy={node.y}
+              r="2.2"
+              fill="#ffffff"
+              style={{
+                filter: "drop-shadow(0px 0px 6px rgba(255, 255, 255, 1)) drop-shadow(0px 0px 12px rgba(59, 130, 246, 0.7))",
+              }}
+            />
+          </g>
+        ))}
+
+        {/* Shimmering spark dots along the drawn line — bright orbs + fine dust */}
         {lineSparks.map((spark, idx) => (
           <circle
             key={`line-spark-${idx}`}
@@ -179,7 +254,9 @@ export function ScrollLine() {
             style={{
               animationDelay: spark.delay,
               animationDuration: spark.speed,
-              filter: "drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.9)) drop-shadow(0px 0px 8px rgba(59, 130, 246, 0.7))",
+              filter: spark.bright
+                ? "drop-shadow(0px 0px 5px rgba(255, 255, 255, 1)) drop-shadow(0px 0px 12px rgba(59, 130, 246, 0.8))"
+                : "drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.85)) drop-shadow(0px 0px 6px rgba(59, 130, 246, 0.6))",
             }}
           />
         ))}
