@@ -62,7 +62,7 @@ export function ScrollLine() {
 
         // Deterministically generate sparks along the drawn line to avoid jitter on scroll
         const tempSparks = [];
-        const count = 55; // 55 sparks distributed along the drawn line
+        const count = 180; // 180 sparks distributed along the drawn line for zero-gap look
         const drawnLength = pathLength * scrollProgress;
         
         for (let i = 0; i < count; i++) {
@@ -71,12 +71,12 @@ export function ScrollLine() {
             const pathPt = pathRef.current.getPointAtLength(lengthAtPoint);
             const seed = (i * 7919) % 360;
             const angle = (seed * Math.PI) / 180;
-            const distance = 6 + (seed % 12); // 6px to 18px offset from line
+            const distance = 1 + (seed % 6); // Keep extremely close (1px to 7px offset) to ensure overlapping
             
             tempSparks.push({
               x: pathPt.x + Math.cos(angle) * distance,
               y: pathPt.y + Math.sin(angle) * distance,
-              r: 0.8 + (seed % 3) * 0.5,
+              r: 1.2 + (seed % 3) * 0.8, // size 1.2px to 2.8px
               delay: `${(seed % 5) * 0.4}s`,
               speed: `${1.2 + (seed % 3) * 0.4}s`,
             });
