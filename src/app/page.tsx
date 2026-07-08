@@ -7,6 +7,8 @@ import { CheckCircle, Users, Code, Activity, School, Database, BarChart3, Zap, S
 import { SyntharaLogo } from '@/components/icons/SyntharaLogo';
 import { Footer } from '@/components/layout/Footer';
 import { ScrollProgress } from '@/components/layout/ScrollProgress';
+import { HeroSpotlight } from '@/components/layout/HeroSpotlight';
+import { TextScramble } from '@/components/ui/TextScramble';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
 
@@ -59,6 +61,7 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-background relative">
       <ScrollProgress />
+      <HeroSpotlight />
 
       <header className="relative z-50 py-4 border-b bg-background">
         <nav className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -240,11 +243,11 @@ export default async function HomePage() {
                       {/* Mock Statistics Mini Grid */}
                       <div className="grid grid-cols-2 gap-2">
                         <div className="p-3 bg-secondary/15 rounded-lg border border-border/5 text-center">
-                          <div className="text-sm font-black text-foreground">1,420</div>
+                          <div className="text-sm font-black text-foreground"><TextScramble value="1,420" /></div>
                           <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">Scraped Rows</div>
                         </div>
                         <div className="p-3 bg-secondary/15 rounded-lg border border-border/5 text-center">
-                          <div className="text-sm font-black text-primary">99.4%</div>
+                          <div className="text-sm font-black text-primary"><TextScramble value="99.4%" /></div>
                           <div className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground">Quality Score</div>
                         </div>
                       </div>
@@ -303,13 +306,26 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Trust Badge / Proof */}
-              <div className="mt-20 pt-8 border-t border-border/50 w-full">
+              {/* Trust Badge / Infinite Marquee */}
+              <div className="mt-20 pt-8 border-t border-border/50 w-full overflow-hidden">
                 <p className="text-sm font-semibold uppercase tracking-widest text-muted-foreground/60 mb-8">Powering modern data workflows</p>
-                <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale transition-all hover:grayscale-0">
-                  <div className="flex items-center gap-2 font-bold text-xl"><Zap className="w-6 h-6 border-none" /> FAST</div>
-                  <div className="flex items-center gap-2 font-bold text-xl"><ShieldCheck className="w-6 h-6 border-none" /> SECURE</div>
-                  <div className="flex items-center gap-2 font-bold text-xl"><Database className="w-6 h-6 border-none" /> ACCURATE</div>
+                <div className="relative w-full flex items-center">
+                  <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+                  <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+                  
+                  <div className="flex gap-16 animate-marquee whitespace-nowrap text-xl font-bold uppercase tracking-wider text-muted-foreground/60 opacity-60">
+                    <span className="flex items-center gap-3"><Zap className="size-5" /> FAST ACCELERATION</span>
+                    <span className="flex items-center gap-3"><ShieldCheck className="size-5" /> SECURE EXTRACTION</span>
+                    <span className="flex items-center gap-3"><Database className="size-5" /> SYNTHETIC DATASETS</span>
+                    <span className="flex items-center gap-3"><Code className="size-5" /> DEVELOPER APIS</span>
+                    <span className="flex items-center gap-3"><Activity className="size-5" /> LIVE SCALING</span>
+                    
+                    <span className="flex items-center gap-3"><Zap className="size-5" /> FAST ACCELERATION</span>
+                    <span className="flex items-center gap-3"><ShieldCheck className="size-5" /> SECURE EXTRACTION</span>
+                    <span className="flex items-center gap-3"><Database className="size-5" /> SYNTHETIC DATASETS</span>
+                    <span className="flex items-center gap-3"><Code className="size-5" /> DEVELOPER APIS</span>
+                    <span className="flex items-center gap-3"><Activity className="size-5" /> LIVE SCALING</span>
+                  </div>
                 </div>
               </div>
             </div>

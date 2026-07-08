@@ -874,7 +874,12 @@ export function ModelTrainingClient() {
               <div key={i} className="flex flex-col gap-1.5 group">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-bold font-mono text-primary/40 group-hover:text-primary transition-colors">{item.step}</span>
-                  <div className="h-px flex-1 bg-border/30" />
+                  <div className="h-2 flex-1 relative overflow-hidden flex items-center">
+                    <svg className="w-full h-1 animate-pulse" preserveAspectRatio="none">
+                      <line x1="0" y1="2" x2="100%" y2="2" className="stroke-primary/20 stroke-[1.5px]" />
+                      <line x1="0" y1="2" x2="100%" y2="2" className="stroke-primary stroke-[1.5px] animate-laser" />
+                    </svg>
+                  </div>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <item.icon className="size-3 text-muted-foreground group-hover:text-primary transition-colors" />
