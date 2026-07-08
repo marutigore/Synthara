@@ -43,6 +43,7 @@ export function ScrollLine() {
   `;
 
   const [pathLength, setPathLength] = useState(0);
+  const [lineSparks, setLineSparks] = useState<Array<{ x: number; y: number; r: number; delay: string; speed: string }>>([]);
 
   useEffect(() => {
     if (pathRef.current) {
@@ -58,6 +59,30 @@ export function ScrollLine() {
       try {
         const p = pathRef.current.getPointAtLength(pathLength * scrollProgress);
         setPoint({ x: p.x, y: p.y });
+
+        // Deterministically generate sparks along the drawn line to avoid jitter on scroll
+        const tempSparks = [];
+        const count = 20; // 20 sparks distributed along the drawn line
+        const drawnLength = pathLength * scrollProgress;
+        
+        for (let i = 0; i < count; i++) {
+          const lengthAtPoint = (i / (count - 1)) * drawnLength;
+          if (lengthAtPoint > 0) {
+            const pathPt = pathRef.current.getPointAtLength(lengthAtPoint);
+            const seed = (i * 7919) % 360;
+            const angle = (seed * Math.PI) / 180;
+            const distance = 6 + (seed % 12); // 6px to 18px offset from line
+            
+            tempSparks.push({
+              x: pathPt.x + Math.cos(angle) * distance,
+              y: pathPt.y + Math.sin(angle) * distance,
+              r: 0.8 + (seed % 3) * 0.5,
+              delay: `${(seed % 5) * 0.4}s`,
+              speed: `${1.2 + (seed % 3) * 0.4}s`,
+            });
+          }
+        }
+        setLineSparks(tempSparks);
       } catch (e) {}
     }
   }, [scrollProgress, pathLength]);
@@ -121,7 +146,7 @@ export function ScrollLine() {
           { r: 1.8, dx: 8, dy: -10, delay: "0.5s", speed: "1.6s" }
         ].map((spark, idx) => (
           <circle
-            key={idx}
+            key={`lead-spark-${idx}`}
             cx={point.x + spark.dx}
             cy={point.y + spark.dy}
             r={spark.r}
@@ -131,6 +156,23 @@ export function ScrollLine() {
               animationDelay: spark.delay,
               animationDuration: spark.speed,
               filter: "drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.9)) drop-shadow(0px 0px 8px rgba(139, 92, 246, 0.6))",
+            }}
+          />
+        ))}
+
+        {/* Shimmering spark dots along the drawn line */}
+        {lineSparks.map((spark, idx) => (
+          <circle
+            key={`line-spark-${idx}`}
+            cx={spark.x}
+            cy={spark.y}
+            r={spark.r}
+            fill="#ffffff"
+            className="animate-pulse"
+            style={{
+              animationDelay: spark.delay,
+              animationDuration: spark.speed,
+              filter: "drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.8)) drop-shadow(0px 0px 6px rgba(139, 92, 246, 0.4))",
             }}
           />
         ))}
