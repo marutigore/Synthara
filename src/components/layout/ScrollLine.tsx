@@ -62,7 +62,7 @@ export function ScrollLine() {
 
         // Deterministically generate sparks along the drawn line to avoid jitter on scroll
         const tempSparks = [];
-        const count = 180; // 180 sparks distributed along the drawn line for zero-gap look
+        const count = 160; // 160 sparks distributed along the drawn line
         const drawnLength = pathLength * scrollProgress;
         
         for (let i = 0; i < count; i++) {
@@ -71,12 +71,12 @@ export function ScrollLine() {
             const pathPt = pathRef.current.getPointAtLength(lengthAtPoint);
             const seed = (i * 7919) % 360;
             const angle = (seed * Math.PI) / 180;
-            const distance = 1 + (seed % 6); // Keep extremely close (1px to 7px offset) to ensure overlapping
+            const distance = 4 + (seed % 31); // Scatter widely (4px to 34px offset) to match screenshot
             
             tempSparks.push({
               x: pathPt.x + Math.cos(angle) * distance,
               y: pathPt.y + Math.sin(angle) * distance,
-              r: 1.2 + (seed % 3) * 0.8, // size 1.2px to 2.8px
+              r: 1.2 + (seed % 4) * 0.9, // size 1.2px to 4.8px (mix of small and large)
               delay: `${(seed % 5) * 0.4}s`,
               speed: `${1.2 + (seed % 3) * 0.4}s`,
             });
@@ -172,7 +172,7 @@ export function ScrollLine() {
             style={{
               animationDelay: spark.delay,
               animationDuration: spark.speed,
-              filter: "drop-shadow(0px 0px 3px rgba(255, 255, 255, 0.8)) drop-shadow(0px 0px 6px rgba(139, 92, 246, 0.4))",
+              filter: "drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.9)) drop-shadow(0px 0px 8px rgba(59, 130, 246, 0.7))",
             }}
           />
         ))}
@@ -180,7 +180,7 @@ export function ScrollLine() {
         <defs>
           <linearGradient id="neon-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="50%" stopColor="#8b5cf6" />
+            <stop offset="50%" stopColor="#60a5fa" />
             <stop offset="100%" stopColor="#3b82f6" />
           </linearGradient>
         </defs>
