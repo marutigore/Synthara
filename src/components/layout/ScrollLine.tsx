@@ -70,12 +70,19 @@ export function ScrollLine() {
           if (lengthAtPoint > 0) {
             const pathPt = pathRef.current.getPointAtLength(lengthAtPoint);
             const seed = (i * 7919) % 360;
-            const angle = (seed * Math.PI) / 180;
-            const distance = 4 + (seed % 31); // Scatter widely (4px to 34px offset) to match screenshot
+            
+            // Deterministically alternate left and right sides
+            const isLeft = i % 2 === 0;
+            const sideSign = isLeft ? -1 : 1;
+            
+            // Horizontal offset (dx): 5px to 35px on both sides of the line
+            const dx = sideSign * (5 + (seed % 31));
+            // Vertical offset (dy): small drift (-8px to +8px) to keep them vertically aligned with path point
+            const dy = ((seed * 7) % 17) - 8;
             
             tempSparks.push({
-              x: pathPt.x + Math.cos(angle) * distance,
-              y: pathPt.y + Math.sin(angle) * distance,
+              x: pathPt.x + dx,
+              y: pathPt.y + dy,
               r: 1.2 + (seed % 4) * 0.9, // size 1.2px to 4.8px (mix of small and large)
               delay: `${(seed % 5) * 0.4}s`,
               speed: `${1.2 + (seed % 3) * 0.4}s`,
