@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 import { ErrorHandler } from '@/components/error-handler';
 import { RouteProgress } from '@/components/ui/route-progress';
+import { CursorTrail } from '@/components/layout/CursorTrail';
 import { Inter, Space_Grotesk } from 'next/font/google'; // Import GoogleFont objects
 
 // Configure Inter font with fallback handling
@@ -53,6 +54,7 @@ export default function RootLayout({
             <RouteProgress />
           </Suspense>
           <ErrorHandler />
+          <CursorTrail />
           {children}
           <Toaster />
         </ThemeProvider>
