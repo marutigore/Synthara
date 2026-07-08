@@ -35,11 +35,11 @@ export function ScrollLine() {
   const { width, height } = dimensions;
   const midX = width / 2;
 
-  // Graceful curves down the page connecting sections
+  // Graceful curves down the page connecting sections (constrained to center 30% width swing)
   const pathData = `
     M ${midX} 10
-    C ${width * 0.8} ${height * 0.15}, ${width * 0.1} ${height * 0.35}, ${midX} ${height * 0.5}
-    C ${width * 0.9} ${height * 0.65}, ${width * 0.15} ${height * 0.85}, ${midX} ${height - 50}
+    C ${midX + Math.min(250, width * 0.15)} ${height * 0.15}, ${midX - Math.min(250, width * 0.15)} ${height * 0.35}, ${midX} ${height * 0.5}
+    C ${midX + Math.min(250, width * 0.15)} ${height * 0.65}, ${midX - Math.min(250, width * 0.15)} ${height * 0.85}, ${midX} ${height - 50}
   `;
 
   const [pathLength, setPathLength] = useState(0);
@@ -110,6 +110,30 @@ export function ScrollLine() {
             filter: "drop-shadow(0px 0px 10px rgba(255, 255, 255, 1)) drop-shadow(0px 0px 20px rgba(139, 92, 246, 0.8))",
           }}
         />
+
+        {/* Small lightning/spark dots orbiting around the lead node */}
+        {[
+          { r: 2, dx: -10, dy: -8, delay: "0s", speed: "1.2s" },
+          { r: 1.5, dx: 12, dy: 10, delay: "0.2s", speed: "1.5s" },
+          { r: 2.5, dx: -7, dy: 12, delay: "0.4s", speed: "1s" },
+          { r: 1.2, dx: 14, dy: -6, delay: "0.15s", speed: "1.8s" },
+          { r: 2, dx: -5, dy: -12, delay: "0.3s", speed: "1.4s" },
+          { r: 1.8, dx: 8, dy: -10, delay: "0.5s", speed: "1.6s" }
+        ].map((spark, idx) => (
+          <circle
+            key={idx}
+            cx={point.x + spark.dx}
+            cy={point.y + spark.dy}
+            r={spark.r}
+            fill="#ffffff"
+            className="animate-pulse"
+            style={{
+              animationDelay: spark.delay,
+              animationDuration: spark.speed,
+              filter: "drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.9)) drop-shadow(0px 0px 8px rgba(139, 92, 246, 0.6))",
+            }}
+          />
+        ))}
 
         <defs>
           <linearGradient id="neon-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
