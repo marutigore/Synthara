@@ -15,6 +15,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
 import { UsageMeter } from "@/components/dashboard/UsageMeter";
+import { ErrorBoundaryCard } from "@/components/ui/ErrorBoundaryCard";
 
 // Quick actions are now defined inside the QuickActions component
 
@@ -105,7 +106,9 @@ export default async function DashboardPage() {
             <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Quick Access</h2>
             <div className="h-px flex-1 bg-border/50" />
           </div>
-          <QuickActions />
+          <ErrorBoundaryCard title="Quick Access Load Failure">
+            <QuickActions />
+          </ErrorBoundaryCard>
         </div>
 
         {/* Dataset Focus (Refined) */}
@@ -114,51 +117,53 @@ export default async function DashboardPage() {
             <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Active Context</h2>
             <div className="h-px flex-1 bg-border/50" />
           </div>
-          <div className="modern-card overflow-hidden group border-primary/10">
-            <div className="h-24 bg-muted/30 relative overflow-hidden border-b">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
-              <div className="p-4 relative z-10 flex items-center justify-between">
-                <div className="p-2 rounded-lg bg-background border shadow-sm text-foreground">
-                  <FileText className="size-5" />
+          <ErrorBoundaryCard title="Active Context Load Failure">
+            <div className="modern-card overflow-hidden group border-primary/10">
+              <div className="h-24 bg-muted/30 relative overflow-hidden border-b">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
+                <div className="p-4 relative z-10 flex items-center justify-between">
+                  <div className="p-2 rounded-lg bg-background border shadow-sm text-foreground">
+                    <FileText className="size-5" />
+                  </div>
+                  <Badge variant="secondary" className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5">
+                    Latest Dataset
+                  </Badge>
                 </div>
-                <Badge variant="secondary" className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5">
-                  Latest Dataset
-                </Badge>
+              </div>
+              <div className="p-4 space-y-4">
+                <div>
+                  <h3 className="text-md font-bold text-foreground tracking-tight truncate">
+                    {lastSavedDataset ? lastSavedDataset.dataset_name : "Initializing..."}
+                  </h3>
+                  <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5 mt-1">
+                    <Clock className="size-3" />
+                    {lastSavedDataset ? `Updated ${formatDistanceToNow(new Date(lastSavedDataset.created_at), { addSuffix: true })}` : "Waiting for data..."}
+                  </p>
+                </div>
+
+                {lastSavedDataset ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50">
+                      <p className="text-[11px] font-semibold text-muted-foreground/60 uppercase">Entries</p>
+                      <p className="text-xs font-bold text-foreground">{lastSavedDataset.num_rows.toLocaleString()}</p>
+                    </div>
+                    <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50">
+                      <p className="text-[11px] font-semibold text-muted-foreground/60 uppercase">Fields</p>
+                      <p className="text-xs font-bold text-foreground">
+                        {Array.isArray(lastSavedDataset.schema_json) ? lastSavedDataset.schema_json.length : "0"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-3 rounded-lg border border-dashed border-border/50 text-center">
+                    <p className="text-[10px] text-muted-foreground italic">Start by generating your first dataset.</p>
+                  </div>
+                )}
+
+                <ViewDatasetButton datasetId={lastSavedDataset?.id} disabled={!lastSavedDataset} />
               </div>
             </div>
-            <div className="p-4 space-y-4">
-              <div>
-                <h3 className="text-md font-bold text-foreground tracking-tight truncate">
-                  {lastSavedDataset ? lastSavedDataset.dataset_name : "Initializing..."}
-                </h3>
-                <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1.5 mt-1">
-                  <Clock className="size-3" />
-                  {lastSavedDataset ? `Updated ${formatDistanceToNow(new Date(lastSavedDataset.created_at), { addSuffix: true })}` : "Waiting for data..."}
-                </p>
-              </div>
-
-              {lastSavedDataset ? (
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50">
-                    <p className="text-[11px] font-semibold text-muted-foreground/60 uppercase">Entries</p>
-                    <p className="text-xs font-bold text-foreground">{lastSavedDataset.num_rows.toLocaleString()}</p>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-secondary/30 border border-border/50">
-                    <p className="text-[11px] font-semibold text-muted-foreground/60 uppercase">Fields</p>
-                    <p className="text-xs font-bold text-foreground">
-                      {Array.isArray(lastSavedDataset.schema_json) ? lastSavedDataset.schema_json.length : "0"}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="p-3 rounded-lg border border-dashed border-border/50 text-center">
-                  <p className="text-[10px] text-muted-foreground italic">Start by generating your first dataset.</p>
-                </div>
-              )}
-
-              <ViewDatasetButton datasetId={lastSavedDataset?.id} disabled={!lastSavedDataset} />
-            </div>
-          </div>
+          </ErrorBoundaryCard>
         </div>
 
         {/* AI Recommendations (Refined) */}
@@ -167,46 +172,48 @@ export default async function DashboardPage() {
             <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Intelligence Engine</h2>
             <div className="h-px flex-1 bg-border/50" />
           </div>
-          <div className="modern-card relative overflow-hidden p-6 bg-gradient-to-br from-primary/10 via-background to-background border-primary/20">
-            <div className="absolute top-0 right-0 -mt-8 -mr-8 h-32 w-32 rounded-full bg-primary/10 blur-2xl pointer-events-none" />
+          <ErrorBoundaryCard title="Intelligence Engine Load Failure">
+            <div className="modern-card relative overflow-hidden p-6 bg-gradient-to-br from-primary/10 via-background to-background border-primary/20">
+              <div className="absolute top-0 right-0 -mt-8 -mr-8 h-32 w-32 rounded-full bg-primary/10 blur-2xl pointer-events-none" />
 
-            <div className="relative z-10 space-y-5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/20 text-primary shadow-inner">
-                    <Sparkles className="size-4 animate-pulse" />
+              <div className="relative z-10 space-y-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-primary/20 text-primary shadow-inner">
+                      <Sparkles className="size-4 animate-pulse" />
+                    </div>
+                    <h4 className="text-[11px] font-bold text-primary uppercase tracking-widest">AI Intelligence</h4>
                   </div>
-                  <h4 className="text-[11px] font-bold text-primary uppercase tracking-widest">AI Intelligence</h4>
+                  <Badge variant="outline" className="text-[11px] font-semibold border-primary/30 text-primary bg-primary/5 uppercase px-2">
+                    High Impact
+                  </Badge>
                 </div>
-                <Badge variant="outline" className="text-[11px] font-semibold border-primary/30 text-primary bg-primary/5 uppercase px-2">
-                  High Impact
-                </Badge>
-              </div>
 
-              <div className="space-y-3">
-                <p className="text-sm text-foreground/90 leading-relaxed font-bold tracking-tight">
-                  Structural Drift Detected
-                </p>
-                <p className="text-xs text-muted-foreground leading-relaxed font-medium">
-                  Recent analysis of <span className="text-foreground font-semibold">Cluster Sigma</span> suggests a 12% drift in schema consistency.
-                </p>
+                <div className="space-y-3">
+                  <p className="text-sm text-foreground/90 leading-relaxed font-bold tracking-tight">
+                    Structural Drift Detected
+                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed font-medium">
+                    Recent analysis of <span className="text-foreground font-semibold">Cluster Sigma</span> suggests a 12% drift in schema consistency.
+                  </p>
 
-                <div className="space-y-2 pt-2">
-                  <div className="flex justify-between items-center text-[10px] font-semibold text-primary/80 uppercase tracking-tighter">
-                    <span>Reliability Index</span>
-                    <span>94%</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-primary/10 rounded-full overflow-hidden">
-                    <div className="h-full w-[94%] bg-primary rounded-full" />
+                  <div className="space-y-2 pt-2">
+                    <div className="flex justify-between items-center text-[10px] font-semibold text-primary/80 uppercase tracking-tighter">
+                      <span>Reliability Index</span>
+                      <span>94%</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-primary/10 rounded-full overflow-hidden">
+                      <div className="h-full w-[94%] bg-primary rounded-full" />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <Button className="w-full h-11 bg-primary shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all font-bold text-[10px] uppercase tracking-widest rounded-xl">
-                Repair Dataset Schema
-              </Button>
+                <Button className="w-full h-11 bg-primary shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all font-bold text-[10px] uppercase tracking-widest rounded-xl">
+                  Repair Dataset Schema
+                </Button>
+              </div>
             </div>
-          </div>
+          </ErrorBoundaryCard>
           
           <UsageMeter />
         </div>

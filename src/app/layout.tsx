@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 import { ErrorHandler } from '@/components/error-handler';
+import { OfflineBanner } from '@/components/layout/OfflineBanner';
 import { RouteProgress } from '@/components/ui/route-progress';
 import { Inter, Space_Grotesk } from 'next/font/google'; // Import GoogleFont objects
 
@@ -53,6 +54,7 @@ export default function RootLayout({
             <RouteProgress />
           </Suspense>
           <ErrorHandler />
+          <OfflineBanner />
           {children}
           <Toaster />
         </ThemeProvider>
