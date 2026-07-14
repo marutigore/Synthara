@@ -37,6 +37,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { ScrapeProgressFeed } from '@/components/dashboard/ScrapeProgressFeed';
+import { ScheduleJobForm } from '@/components/dashboard/ScheduleJobForm';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -1220,6 +1221,8 @@ export function DataGenerationClient() {
             </Card>
           </div>
         )}
+
+        <ScheduleJobForm defaultQuery={watchedValues.prompt} />
       </div>
     </div>
   );
