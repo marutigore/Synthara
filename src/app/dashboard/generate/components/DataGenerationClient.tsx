@@ -115,6 +115,30 @@ export function DataGenerationClient() {
     };
   }, []);
 
+  // Hydrate active scraping job on page reload
+  useEffect(() => {
+    const activeJob = localStorage.getItem('synthara-active-generation-job');
+    if (activeJob) {
+      try {
+        const parsed = JSON.parse(activeJob);
+        setValue('prompt', parsed.prompt);
+        setValue('numRows', parsed.numRows);
+        setValue('useWebData', parsed.useWebData);
+        setValue('datasetName', parsed.datasetName);
+        
+        setIsGenerating(true);
+        setShowTerminal(true);
+        
+        toast({
+          title: "Session hydrated",
+          description: `Resumed tracking of active generation job '${parsed.datasetName}'.`
+        });
+      } catch (e) {
+        localStorage.removeItem('synthara-active-generation-job');
+      }
+    }
+  }, [setValue, toast]);
+
   useEffect(() => {
     if (enhancementInfo && watchedValues.prompt !== enhancementInfo.enhancedPrompt) {
       setEnhancementInfo(null);
@@ -350,6 +374,13 @@ export function DataGenerationClient() {
     setIsAnalyzingScraped(false);
     setShowTerminal(true);
     streamedRowCountRef.current = 0;
+
+    localStorage.setItem('synthara-active-generation-job', JSON.stringify({
+      prompt: data.prompt,
+      numRows: data.numRows,
+      useWebData: data.useWebData,
+      datasetName: data.datasetName
+    }));
 
     try {
       // Scroll to terminal with a slight delay to ensure it's rendered
@@ -979,10 +1010,12 @@ export function DataGenerationClient() {
                     useWebData: watchedValues.useWebData,
                   }}
                   onComplete={(result) => {
+                    localStorage.removeItem('synthara-active-generation-job');
                     setGenerationResult(result);
                     setIsGenerating(false);
                   }}
                   onError={(error) => {
+                    localStorage.removeItem('synthara-active-generation-job');
                     console.error('Generation error:', error);
                     setIsGenerating(false);
                     setIsSubmitting(false);
