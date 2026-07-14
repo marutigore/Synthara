@@ -46,7 +46,7 @@ export default function RootLayout({
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange
+
         >
           {/* Route transition progress bar */}
           <Suspense fallback={null}>

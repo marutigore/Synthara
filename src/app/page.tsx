@@ -10,6 +10,7 @@ import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import { HeroSpotlight } from '@/components/layout/HeroSpotlight';
 import { ScrollLine } from '@/components/layout/ScrollLine';
 import { TextScramble } from '@/components/ui/TextScramble';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
 
@@ -108,6 +109,8 @@ export default async function HomePage() {
                 <Link href="/auth">Sign In</Link>
               </Button>
             )}
+
+            <ThemeToggle />
           </div>
 
           {/* Mobile Navigation Toggle via CSS Peer */}
