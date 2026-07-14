@@ -14,6 +14,7 @@ import { getUserActivities, getUserDatasets, type ActivityLog, type SavedDataset
 import { formatDistanceToNow } from 'date-fns';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
+import { UsageMeter } from "@/components/dashboard/UsageMeter";
 
 // Quick actions are now defined inside the QuickActions component
 
@@ -206,6 +207,8 @@ export default async function DashboardPage() {
               </Button>
             </div>
           </div>
+          
+          <UsageMeter />
         </div>
       </div>
     </div>
