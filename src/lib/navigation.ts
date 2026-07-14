@@ -19,6 +19,7 @@ export const mainNavItems: NavItem[] = [
   { title: 'Data Analysis', href: '/dashboard/analysis', icon: BarChartBig },
   { title: 'Data Visualization', href: '/dashboard/datavisualization', icon: BarChartBig },
   { title: 'Dataset Market', href: '/dashboard/market', icon: Globe },
+  { title: 'Background Jobs', href: '/dashboard/jobs', icon: Brain },
 ];
 
 export const userNavItems: NavItem[] = [
