@@ -30,6 +30,13 @@ services:
     networks:
       - synthara-network
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 2048M
+        reservations:
+          memory: 512M
 
 networks:
   synthara-network:
