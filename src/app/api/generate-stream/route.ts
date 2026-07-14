@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server';
 import { intelligentWebScraping } from '@/ai/flows/intelligent-web-scraping-flow';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { decryptKey } from '@/lib/utils/encryption';
+import { cookies } from 'next/headers';
 
 // Request deduplication for stream API
 const activeRequests = new Map<string, Promise<Response>>();
@@ -72,8 +74,19 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const geminiKey = request.headers.get('x-gemini-key');
-  const serpapiKey = request.headers.get('x-serpapi-key');
+  let geminiKey = request.headers.get('x-gemini-key');
+  let serpapiKey = request.headers.get('x-serpapi-key');
+
+  const cookieStore = await cookies();
+  if (!geminiKey) {
+    const encCookie = cookieStore.get('synthara_enc_gemini')?.value || '';
+    if (encCookie) geminiKey = decryptKey(encCookie);
+  }
+  if (!serpapiKey) {
+    const encCookie = cookieStore.get('synthara_enc_serp')?.value || '';
+    if (encCookie) serpapiKey = decryptKey(encCookie);
+  }
+
   if (geminiKey) {
     process.env.GOOGLE_GEMINI_API_KEY = geminiKey;
   }

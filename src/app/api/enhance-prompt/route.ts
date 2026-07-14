@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-
 import { enhancePrompt } from '@/ai/flows/enhance-prompt-flow';
 import { logActivity } from '@/lib/supabase/actions';
+import { decryptKey } from '@/lib/utils/encryption';
+import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
   try {
-    const geminiKey = request.headers.get('x-gemini-key');
+    let geminiKey = request.headers.get('x-gemini-key');
+    if (!geminiKey) {
+      const cookieStore = await cookies();
+      const encCookie = cookieStore.get('synthara_enc_gemini')?.value || '';
+      if (encCookie) {
+        geminiKey = decryptKey(encCookie);
+      }
+    }
     if (geminiKey) {
       process.env.GOOGLE_GEMINI_API_KEY = geminiKey;
     }
