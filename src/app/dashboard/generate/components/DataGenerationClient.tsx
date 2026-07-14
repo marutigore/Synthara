@@ -36,6 +36,7 @@ import {
   Settings2,
   Sparkles,
 } from 'lucide-react';
+import { ScrapeProgressFeed } from '@/components/dashboard/ScrapeProgressFeed';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -1015,6 +1016,14 @@ export function DataGenerationClient() {
                 <Globe className="size-3.5 text-primary animate-pulse" />
                 Scraper Diagnostics ({scrapedContent.length} URLs)
               </span>
+
+              {isGenerating && watchedValues.useWebData && (
+                <ScrapeProgressFeed
+                  isActive={isGenerating}
+                  taskName={watchedValues.datasetName || "Web Crawl Task"}
+                />
+              )}
+
               <div className="glass-modern p-4 border border-border/50 rounded-xl max-h-[385px] overflow-y-auto custom-scrollbar space-y-3 bg-secondary/5">
                 {scrapedContent.length === 0 ? (
                   <div className="h-48 flex flex-col items-center justify-center text-center text-muted-foreground p-6">
