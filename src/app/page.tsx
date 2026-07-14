@@ -14,6 +14,8 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
 
+export const revalidate = 3600; // Revalidate landing page cache at the edge every hour
+
 const features = [
   { name: 'Intelligent Data Generation', icon: Database, description: 'Create realistic synthetic datasets tailored to your needs using advanced AI models.' },
   { name: 'In-depth Data Analysis', icon: BarChart3, description: 'Automatically analyze generated data for quality, insights, and potential issues.' },

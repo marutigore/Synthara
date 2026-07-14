@@ -124,8 +124,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
+  // Edge caching configuration for assets and public pages
+  if (pathname.startsWith('/_next/static') || pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js)$/)) {
+    response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+
   // Return the response, which may have updated cookies from supabase.auth.getUser()
-  return response
+  return response;
 }
 
 export const config = {
