@@ -83,7 +83,8 @@ export async function POST(request: NextRequest) {
     }
 
     const successCount = results.filter(r => r.success).length;
-    console.log(`[Crawl4AI API] Completed: ${successCount}/${urls.length} URLs scraped successfully`);
+    const failCount = urls.length - successCount;
+    console.log(`[Crawl4AI API] Scraping completed. Successes: ${successCount}, Failures: ${failCount}. Initiating partial data compilation.`);
 
     return NextResponse.json({
       success: successCount > 0,
@@ -91,7 +92,8 @@ export async function POST(request: NextRequest) {
       summary: {
         total: urls.length,
         successful: successCount,
-        failed: urls.length - successCount
+        failed: failCount,
+        recoveryStatus: successCount > 0 ? "partial_recovery_active" : "failed"
       }
     });
 
