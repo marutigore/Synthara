@@ -14,6 +14,7 @@ import Link from "next/link";
 import { getUserActivities, type ActivityLog } from '@/lib/supabase/actions';
 import { format } from 'date-fns';
 import { TableSkeleton } from "@/components/ui/TableSkeleton";
+import { DatasetVersionHistory } from "@/components/dashboard/DatasetVersionHistory";
 
 function getActivityIcon(activityType: string) {
   switch (activityType) {
@@ -191,6 +192,8 @@ export default function HistoryPage() {
             </div>
         </CardFooter>
       </Card>
+
+      <DatasetVersionHistory />
     </div>
   );
 }
