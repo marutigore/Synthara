@@ -22,9 +22,18 @@ export async function middleware(request: NextRequest) {
     {
       global: {
         fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+          if (init?.signal) {
+            init.signal.addEventListener('abort', () => controller.abort());
+          }
+
           return fetch(input, {
             ...init,
-            signal: AbortSignal.timeout(1500),
+            signal: controller.signal,
+          }).finally(() => {
+            clearTimeout(timeoutId);
           });
         }
       },
