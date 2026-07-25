@@ -39,6 +39,7 @@ import {
 import { ScrapeProgressFeed } from '@/components/dashboard/ScrapeProgressFeed';
 import { ScheduleJobForm } from '@/components/dashboard/ScheduleJobForm';
 import { decryptClientValue } from '@/lib/utils/client-encryption';
+import { SchemaMapper } from '@/components/dashboard/SchemaMapper';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -1150,6 +1151,25 @@ export function DataGenerationClient() {
                 <Sparkles className="absolute -right-4 -bottom-4 size-32 text-primary/5 group-hover:text-primary/10 transition-colors duration-700" />
               </div>
             )}
+
+            {/* Schema Mapper Verification Panel */}
+            <SchemaMapper
+              columns={generationResult.schema || []}
+              onTypeChange={(colName, newType) => {
+                if (!generationResult) return;
+                const updatedSchema = generationResult.schema.map(c => 
+                  c.name === colName ? { ...c, type: newType } : c
+                );
+                setGenerationResult({
+                  ...generationResult,
+                  schema: updatedSchema
+                });
+                toast({
+                  title: "Column type mapped",
+                  description: `Field '${colName}' type adjusted to ${newType}.`
+                });
+              }}
+            />
 
             <Card className="modern-card border-none shadow-sm overflow-hidden bg-background/40 backdrop-blur-md">
               <CardHeader className="bg-muted/20 border-b border-border/10 px-8 py-6">
