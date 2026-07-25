@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { ScrapeProgressFeed } from '@/components/dashboard/ScrapeProgressFeed';
 import { ScheduleJobForm } from '@/components/dashboard/ScheduleJobForm';
+import { decryptClientValue } from '@/lib/utils/client-encryption';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -399,8 +400,11 @@ export function DataGenerationClient() {
       };
 
       // Start the generation process using internal pipeline
-      const geminiKey = typeof window !== 'undefined' ? (localStorage.getItem('synthara_gemini_key') || '') : '';
-      const serpapiKey = typeof window !== 'undefined' ? (localStorage.getItem('synthara_serpapi_key') || '') : '';
+      const rawGemini = typeof window !== 'undefined' ? (localStorage.getItem('synthara_gemini_key') || '') : '';
+      const rawSerp = typeof window !== 'undefined' ? (localStorage.getItem('synthara_serpapi_key') || '') : '';
+      
+      const geminiKey = rawGemini.startsWith('U2Fsd') || rawGemini.length > 30 ? decryptClientValue(rawGemini) : rawGemini;
+      const serpapiKey = rawSerp.startsWith('U2Fsd') || rawSerp.length > 30 ? decryptClientValue(rawSerp) : rawSerp;
 
       const response = await fetch('/api/generate-stream', {
         method: 'POST',
