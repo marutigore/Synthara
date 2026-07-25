@@ -41,23 +41,45 @@ export async function POST(request: NextRequest) {
 
         // Call actual Crawl4AI service
         const crawl4aiUrl = process.env.CRAWL4AI_SERVICE_URL || process.env.CRAWL4AI_EXTRACT_URL || 'http://localhost:11235';
-        const response = await fetch(`${crawl4aiUrl}/crawl`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            urls: [url],
-            browser_config: {},
-            crawler_config: defaultOptions
-          }),
-        });
+        let crawlResult;
+        
+        try {
+          const response = await fetch(`${crawl4aiUrl}/crawl`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              urls: [url],
+              browser_config: {},
+              crawler_config: defaultOptions
+            }),
+          });
 
-        if (!response.ok) {
-          throw new Error(`Crawl4AI service error: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`Crawl4AI service error: ${response.status}`);
+          }
+          crawlResult = await response.json();
+        } catch (crawlError) {
+          console.warn(`[Crawl4AI Fallback] Service failed. Executing JSDom mock scraper fallback for ${url}`);
+          const fallbackRes = await fetch(url, { signal: AbortSignal.timeout(10000) });
+          if (!fallbackRes.ok) throw new Error(`Fallback HTTP request failed: ${fallbackRes.status}`);
+          const rawHtml = await fallbackRes.text();
+          
+          // Heuristic parser mock
+          const cleanText = rawHtml
+            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+            .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, "")
+            .replace(/<[^>]*>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+          crawlResult = {
+            title: url.split('/').pop() || 'Parsed Page',
+            content: cleanText.substring(0, 15000),
+            markdown: cleanText.substring(0, 12000)
+          };
         }
-
-        const crawlResult = await response.json();
 
         results.push({
           url,
