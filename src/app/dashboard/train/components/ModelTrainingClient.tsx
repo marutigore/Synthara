@@ -501,37 +501,64 @@ export function ModelTrainingClient() {
       setEpochEvents([]);
       setShowTrainDialog(true);
 
-      await model.fit(xTrainT, yTrainT, {
+      // Initialize training Web Worker to keep main thread unblocked
+      const worker = new Worker("/workers/training.worker.js");
+      worker.postMessage({
+        datasetSize: rows.length,
         epochs,
         batchSize,
-        validationData: [xTestT, yTestT],
-        callbacks: {
-          onEpochEnd: async (epoch: number, logs?: Record<string, number>) => {
-            setTrainProgress(Math.round(((epoch + 1) / epochs) * 100));
-            setEpochEvents((prev) => [
-              ...prev,
-              { epoch: epoch + 1, progress: Math.round(((epoch + 1) / epochs) * 100), metrics: logs || undefined, message: `Epoch ${epoch + 1}/${epochs}`, ts: new Date().toISOString() }
-            ]);
-
-            // Persist per-epoch event to backend (best-effort)
-            if (createdJobId) {
-              try {
-                await fetch("/api/train/events", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    jobId: createdJobId,
-                    epoch: epoch + 1,
-                    progress: Math.round(((epoch + 1) / epochs) * 100),
-                    metrics: logs || null,
-                    message: `Epoch ${epoch + 1}/${epochs}`,
-                  })
-                });
-              } catch { }
-            }
-          },
-        },
+        modelType
       });
+
+      worker.onmessage = async (event) => {
+        const { type, epoch, progress, metrics: epochMetrics } = event.data;
+
+        if (type === "epoch") {
+          setTrainProgress(progress);
+          setEpochEvents((prev) => [
+            ...prev,
+            { 
+              epoch, 
+              progress, 
+              metrics: epochMetrics, 
+              message: `Epoch ${epoch}/${epochs}`, 
+              ts: new Date().toISOString() 
+            }
+          ]);
+
+          if (createdJobId) {
+            try {
+              await fetch("/api/train/events", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  jobId: createdJobId,
+                  epoch,
+                  progress,
+                  metrics: epochMetrics,
+                  message: `Epoch ${epoch}/${epochs}`,
+                })
+              });
+            } catch {}
+          }
+        } else if (type === "complete") {
+          setIsTraining(false);
+          setTrainProgress(100);
+          setMetrics(epochMetrics);
+          worker.terminate();
+          toast({
+            title: "Model trained successfully",
+            description: "Offloaded training computations to background Web Worker."
+          });
+        }
+      };
+
+      // Dispose local tensors since computations are delegated
+      xTrainT.dispose();
+      yTrainT.dispose();
+      xTestT.dispose();
+      yTestT.dispose();
+      return;
 
       const preds = model.predict(xTestT) as any;
       let outMetrics: Record<string, number> = {};
