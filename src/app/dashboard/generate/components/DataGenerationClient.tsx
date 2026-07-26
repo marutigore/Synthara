@@ -40,6 +40,7 @@ import { ScrapeProgressFeed } from '@/components/dashboard/ScrapeProgressFeed';
 import { ScheduleJobForm } from '@/components/dashboard/ScheduleJobForm';
 import { decryptClientValue } from '@/lib/utils/client-encryption';
 import { SchemaMapper } from '@/components/dashboard/SchemaMapper';
+import { DataCleaner } from '@/components/dashboard/DataCleaner';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -1167,6 +1168,18 @@ export function DataGenerationClient() {
                 toast({
                   title: "Column type mapped",
                   description: `Field '${colName}' type adjusted to ${newType}.`
+                });
+              }}
+            />
+
+            {/* Data Cleaner Pipeline Panel */}
+            <DataCleaner
+              data={generationResult.data || []}
+              onCleanedData={(cleanedData) => {
+                if (!generationResult) return;
+                setGenerationResult({
+                  ...generationResult,
+                  data: cleanedData,
                 });
               }}
             />
