@@ -945,7 +945,19 @@ export function DataGenerationClient() {
               </div>
             </div>
 
-            <div className="flex gap-4 pt-4 px-1">
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 px-1">
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={isGenerating || isSubmitting || !watchedValues.prompt?.trim()}
+                onClick={() => {
+                  setValue('numRows', 3);
+                  form.handleSubmit(onSubmit)();
+                }}
+                className="h-14 px-6 rounded-2xl text-xs font-black uppercase tracking-wider border border-primary/20 bg-primary/5 hover:bg-primary/10 text-primary transition-all flex items-center justify-center gap-2"
+              >
+                <Sparkles className="h-4 w-4" /> Fast Preview (3 Rows)
+              </Button>
               <Button
                 type="submit"
                 disabled={isGenerating || isSubmitting || !form.formState.isValid || !watchedValues.prompt.trim()}
@@ -962,7 +974,7 @@ export function DataGenerationClient() {
                 variant="outline"
                 onClick={handleReset}
                 disabled={isGenerating}
-                className="h-14 w-14 rounded-2xl border-border/50 p-0 hover:bg-secondary/50 transition-all"
+                className="h-14 w-14 rounded-2xl border-border/50 p-0 hover:bg-secondary/50 transition-all shrink-0"
                 title="Reset Forge"
               >
                 <RefreshCw className="h-5 w-5 text-muted-foreground" />
