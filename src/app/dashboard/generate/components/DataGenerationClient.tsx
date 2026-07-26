@@ -42,6 +42,7 @@ import { decryptClientValue } from '@/lib/utils/client-encryption';
 import { SchemaMapper } from '@/components/dashboard/SchemaMapper';
 import { DataCleaner } from '@/components/dashboard/DataCleaner';
 import { PiiAnonymizerCard } from '@/components/dashboard/PiiAnonymizerCard';
+import { DatasetDistributionInsights } from '@/components/dashboard/DatasetDistributionInsights';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -1207,6 +1208,12 @@ export function DataGenerationClient() {
                   data: anonymizedData,
                 });
               }}
+            />
+
+            {/* Dataset Distribution Analytics Panel */}
+            <DatasetDistributionInsights
+              data={generationResult.data || []}
+              schema={generationResult.schema || []}
             />
 
             <Card className="modern-card border-none shadow-sm overflow-hidden bg-background/40 backdrop-blur-md">
