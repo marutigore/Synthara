@@ -41,6 +41,7 @@ import { ScheduleJobForm } from '@/components/dashboard/ScheduleJobForm';
 import { decryptClientValue } from '@/lib/utils/client-encryption';
 import { SchemaMapper } from '@/components/dashboard/SchemaMapper';
 import { DataCleaner } from '@/components/dashboard/DataCleaner';
+import { PiiAnonymizerCard } from '@/components/dashboard/PiiAnonymizerCard';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -1180,6 +1181,18 @@ export function DataGenerationClient() {
                 setGenerationResult({
                   ...generationResult,
                   data: cleanedData,
+                });
+              }}
+            />
+
+            {/* PII Anonymizer Privacy Panel */}
+            <PiiAnonymizerCard
+              data={generationResult.data || []}
+              onAnonymizedData={(anonymizedData) => {
+                if (!generationResult) return;
+                setGenerationResult({
+                  ...generationResult,
+                  data: anonymizedData,
                 });
               }}
             />
