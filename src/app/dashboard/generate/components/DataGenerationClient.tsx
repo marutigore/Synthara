@@ -43,6 +43,7 @@ import { SchemaMapper } from '@/components/dashboard/SchemaMapper';
 import { DataCleaner } from '@/components/dashboard/DataCleaner';
 import { PiiAnonymizerCard } from '@/components/dashboard/PiiAnonymizerCard';
 import { DatasetDistributionInsights } from '@/components/dashboard/DatasetDistributionInsights';
+import { QualityHeatmap } from '@/components/dashboard/QualityHeatmap';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -1212,6 +1213,12 @@ export function DataGenerationClient() {
 
             {/* Dataset Distribution Analytics Panel */}
             <DatasetDistributionInsights
+              data={generationResult.data || []}
+              schema={generationResult.schema || []}
+            />
+
+            {/* Quality Heatmap Matrix Panel */}
+            <QualityHeatmap
               data={generationResult.data || []}
               schema={generationResult.schema || []}
             />
