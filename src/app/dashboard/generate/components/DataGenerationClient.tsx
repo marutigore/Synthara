@@ -44,6 +44,7 @@ import { DataCleaner } from '@/components/dashboard/DataCleaner';
 import { PiiAnonymizerCard } from '@/components/dashboard/PiiAnonymizerCard';
 import { DatasetDistributionInsights } from '@/components/dashboard/DatasetDistributionInsights';
 import { QualityHeatmap } from '@/components/dashboard/QualityHeatmap';
+import { PromptTemplateSelector } from '@/components/dashboard/PromptTemplateSelector';
 
 // Form validation schema
 const dataGenerationSchema = z.object({
@@ -927,6 +928,13 @@ export function DataGenerationClient() {
                     Enhance Prompt
                   </Button>
                 </div>
+                <PromptTemplateSelector
+                  onSelectTemplate={(tmpl) => {
+                    setValue('prompt', tmpl.prompt);
+                    setValue('numRows', tmpl.recommendedRows);
+                  }}
+                />
+
                 <div className="relative group">
                   <Textarea
                     id="prompt"
