@@ -82,7 +82,11 @@ export function AuthForm() {
           router.refresh();
         }
       } catch (error: any) {
-        setAuthMessage({ type: 'error', text: error.error_description || error.message || "An unexpected error occurred." });
+        let msg = error.error_description || error.message || "An unexpected error occurred.";
+        if (msg.includes("fetch failed") || msg.includes("Failed to fetch")) {
+          msg = "Unable to connect to authentication server. Please check your internet connection or Supabase service configuration.";
+        }
+        setAuthMessage({ type: 'error', text: msg });
       } finally {
         setIsSubmitting(false);
       }
