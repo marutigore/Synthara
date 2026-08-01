@@ -27,6 +27,12 @@ export async function createSupabaseServerClient() {
           return fetch(input, {
             ...init,
             signal: controller.signal,
+          }).catch((err) => {
+            console.warn('[Supabase Server] Network fetch failed or unreachable:', err.message);
+            return new Response(JSON.stringify({ error: 'Supabase host unreachable' }), {
+              status: 503,
+              headers: { 'Content-Type': 'application/json' },
+            });
           }).finally(() => {
             clearTimeout(timeoutId);
           });
