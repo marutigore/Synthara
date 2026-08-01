@@ -36,33 +36,7 @@ export function createSupabaseBrowserClient() {
   try {
     const client = createBrowserClient(
       supabaseUrl,
-      supabaseAnonKey,
-      {
-        global: {
-          fetch: (input: RequestInfo | URL, init?: RequestInit) => {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-            // Merge existing signals if any exist
-            if (init?.signal) {
-              init.signal.addEventListener('abort', () => controller.abort());
-            }
-
-            return fetch(input, {
-              ...init,
-              signal: controller.signal,
-            }).catch((err) => {
-              console.warn('[Supabase Client] Network fetch failed or unreachable:', err.message);
-              return new Response(JSON.stringify({ error: 'Supabase host unreachable' }), {
-                status: 503,
-                headers: { 'Content-Type': 'application/json' },
-              });
-            }).finally(() => {
-              clearTimeout(timeoutId);
-            });
-          }
-        }
-      }
+      supabaseAnonKey
     );
     return client;
   } catch (e: any) {

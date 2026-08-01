@@ -20,29 +20,6 @@ export async function middleware(request: NextRequest) {
     supabaseUrl,
     supabaseAnonKey,
     {
-      global: {
-        fetch: (input: RequestInfo | URL, init?: RequestInit) => {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-          if (init?.signal) {
-            init.signal.addEventListener('abort', () => controller.abort());
-          }
-
-          return fetch(input, {
-            ...init,
-            signal: controller.signal,
-          }).catch((err) => {
-            console.warn('[Supabase Middleware] Network fetch failed or unreachable:', err.message);
-            return new Response(JSON.stringify({ error: 'Supabase host unreachable' }), {
-              status: 503,
-              headers: { 'Content-Type': 'application/json' },
-            });
-          }).finally(() => {
-            clearTimeout(timeoutId);
-          });
-        }
-      },
       cookies: {
         get(name: string) {
           return request.cookies.get(name)?.value
