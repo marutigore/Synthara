@@ -47,6 +47,8 @@ const teamMembers = [
 ];
 
 
+import { ParticleNetwork } from '@/components/layout/ParticleNetwork';
+
 export default async function HomePage() {
   const supabase = await createSupabaseServerClient();
   let user = null;
@@ -65,6 +67,7 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col min-h-screen bg-background relative">
       <ScrollProgress />
+      <ParticleNetwork />
       <HeroSpotlight />
       <ScrollLine />
 
