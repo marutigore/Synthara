@@ -48,6 +48,7 @@ const teamMembers = [
 
 
 import { ParticleNetwork } from '@/components/layout/ParticleNetwork';
+import { TiltCard } from '@/components/ui/TiltCard';
 
 export default async function HomePage() {
   const supabase = await createSupabaseServerClient();
@@ -355,7 +356,7 @@ export default async function HomePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature) => (
-                <div key={feature.name} className="modern-card group p-8 hover:-translate-y-2 transition-all">
+                <TiltCard key={feature.name} className="modern-card group p-8 hover:-translate-y-2 transition-all">
                   <div className="flex flex-col items-start gap-6">
                     <div className="p-4 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors shadow-inner">
                       <feature.icon className="w-8 h-8" />
@@ -365,7 +366,7 @@ export default async function HomePage() {
                       <p className="text-muted-foreground text-base leading-relaxed">{feature.description}</p>
                     </div>
                   </div>
-                </div>
+                </TiltCard>
               ))}
             </div>
           </div>
