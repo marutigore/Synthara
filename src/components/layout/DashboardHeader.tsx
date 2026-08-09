@@ -22,7 +22,7 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
-import { Breadcrumbs } from './Breadcrumbs';
+import { NotificationCenter } from '@/components/dashboard/NotificationCenter';
 
 export function DashboardHeader() {
   const { isMobile } = useSidebar();
@@ -72,9 +72,7 @@ export function DashboardHeader() {
 
       <ThemeToggle />
 
-      <Button variant="ghost" size="icon" className="rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted hidden sm:flex h-10 w-10 border border-transparent hover:border-border/50 transition-all" aria-label="Notifications">
-        <Bell className="h-4.5 w-4.5" />
-      </Button>
+      <NotificationCenter />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
