@@ -62,15 +62,18 @@ export function AppSidebar() {
     };
 
     return (
-        <Sidebar collapsible="icon" className="border-r border-border/50 bg-card/50 backdrop-blur-xl">
-            <SidebarHeader className="h-16 flex items-center px-4 border-b border-border/30">
-                <Link href="/dashboard" className="flex items-center gap-3 transition-all hover:opacity-80">
-                    <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+        <Sidebar collapsible="icon" className="border-r border-border/40 bg-card/60 backdrop-blur-2xl shadow-xl transition-all duration-300">
+            <SidebarHeader className="h-16 flex items-center px-4 border-b border-border/30 bg-gradient-to-r from-primary/5 via-transparent to-transparent">
+                <Link href="/dashboard" className="flex items-center gap-3 transition-all hover:opacity-90 group">
+                    <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-gradient-to-tr from-primary via-blue-500 to-indigo-500 text-primary-foreground shadow-lg shadow-primary/25 group-hover:scale-105 transition-transform duration-300">
                         <SyntharaLogo className="size-5 fill-current" />
                     </div>
                     <div className="flex flex-col gap-0.5 leading-none group-data-[collapsible=icon]:hidden">
-                        <span className="font-headline text-lg font-black tracking-tight text-foreground">Synthara</span>
-                        <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/60">Intelligence Hub</span>
+                        <span className="font-headline text-lg font-black tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-r from-foreground via-foreground/90 to-primary">Synthara</span>
+                        <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground/70 flex items-center gap-1.5">
+                            <span className="size-1.5 rounded-full bg-emerald-500 animate-ping" />
+                            Intelligence Hub
+                        </span>
                     </div>
                 </Link>
             </SidebarHeader>
@@ -95,18 +98,18 @@ export function AppSidebar() {
                 </SidebarGroup>
             </SidebarContent>
 
-            <SidebarFooter className="p-4 border-t border-border/30 gap-4">
+            <SidebarFooter className="p-4 border-t border-border/30 gap-4 bg-gradient-to-b from-transparent to-primary/5">
                 <div className="group-data-[collapsible=icon]:hidden">
                     <SidebarNav navItems={helpNavItems} />
                 </div>
 
                 <div className="group-data-[collapsible=icon]:hidden">
-                    <div className="px-4 py-3 rounded-2xl bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 flex items-center justify-between">
+                    <div className="px-4 py-3 rounded-2xl bg-gradient-to-br from-primary/15 via-primary/5 to-transparent border border-primary/20 flex items-center justify-between shadow-sm hover:border-primary/40 transition-colors">
                         <div className="flex flex-col gap-1">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary/60">Current Tier</p>
-                            <p className="text-sm font-bold text-foreground">Professional</p>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary">Current Tier</p>
+                            <p className="text-sm font-bold text-foreground">Enterprise Ultra</p>
                         </div>
-                        <div className="size-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold text-[10px]">
+                        <div className="size-8 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-black text-[10px] border border-primary/30 shadow-inner">
                             PRO
                         </div>
                     </div>
@@ -120,17 +123,21 @@ export function AppSidebar() {
                                     size="lg"
                                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-14 rounded-2xl border border-transparent hover:border-border/50 transition-all duration-300"
                                 >
-                                    <Avatar className="h-9 w-9 rounded-xl border-2 border-primary/20">
-                                        <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email || ""} />
-                                        <AvatarFallback className="rounded-xl bg-primary/10 text-primary font-bold">
-                                            {user?.email?.charAt(0).toUpperCase() || "S"}
-                                        </AvatarFallback>
-                                    </Avatar>
+                                    <div className="relative">
+                                        <Avatar className="h-9 w-9 rounded-xl border-2 border-primary/30 shadow-sm">
+                                            <AvatarImage src={user?.user_metadata?.avatar_url} alt={user?.email || ""} />
+                                            <AvatarFallback className="rounded-xl bg-primary/10 text-primary font-bold">
+                                                {user?.email?.charAt(0).toUpperCase() || "S"}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
+                                    </div>
                                     <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                                         <span className="truncate font-bold text-foreground">
                                             {user?.user_metadata?.full_name || user?.email?.split('@')[0] || "Strategist"}
                                         </span>
-                                        <span className="truncate text-xs text-muted-foreground font-medium">
+                                        <span className="truncate text-xs text-muted-foreground font-medium flex items-center gap-1">
+                                            <span className="size-1 rounded-full bg-emerald-500" />
                                             {user?.email || "syncing intelligence..."}
                                         </span>
                                     </div>
