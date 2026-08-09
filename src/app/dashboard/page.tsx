@@ -16,6 +16,7 @@ import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/utils/timeout';
 import { UsageMeter } from "@/components/dashboard/UsageMeter";
 import { ErrorBoundaryCard } from "@/components/ui/ErrorBoundaryCard";
+import { WidgetGrid } from "@/components/dashboard/WidgetGrid";
 
 // Quick actions are now defined inside the QuickActions component
 
@@ -98,21 +99,21 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      {/* Core Workspace Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Quick Actions (Compact) */}
-        <div className="lg:col-span-4 space-y-3">
+      {/* Core Workspace Layout wrapped in WidgetGrid */}
+      <WidgetGrid titles={["Quick Actions & Controls", "Active Context & Latest Dataset", "AI Intelligence Engine & Usage"]}>
+        {/* Column 1: Quick Actions */}
+        <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">
-            <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Quick Access</h2>
+            <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Quick Actions</h2>
             <div className="h-px flex-1 bg-border/50" />
           </div>
-          <ErrorBoundaryCard title="Quick Access Load Failure">
+          <ErrorBoundaryCard title="Quick Actions Load Failure">
             <QuickActions />
           </ErrorBoundaryCard>
         </div>
 
-        {/* Dataset Focus (Refined) */}
-        <div className="lg:col-span-4 space-y-3">
+        {/* Column 2: Active Context */}
+        <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">
             <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Active Context</h2>
             <div className="h-px flex-1 bg-border/50" />
@@ -166,8 +167,8 @@ export default async function DashboardPage() {
           </ErrorBoundaryCard>
         </div>
 
-        {/* AI Recommendations (Refined) */}
-        <div className="lg:col-span-4 space-y-3">
+        {/* Column 3: AI Intelligence Engine & Usage */}
+        <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">
             <h2 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em]">Intelligence Engine</h2>
             <div className="h-px flex-1 bg-border/50" />
@@ -217,7 +218,7 @@ export default async function DashboardPage() {
           
           <UsageMeter />
         </div>
-      </div>
+      </WidgetGrid>
     </div>
   );
 }
