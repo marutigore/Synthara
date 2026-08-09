@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
+import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 
 interface StatsCardProps {
   title: string;
@@ -20,6 +21,9 @@ export function StatsCard({ title, value, icon: Icon, trend, color = 'blue' }: S
     orange: 'text-orange-500 bg-orange-500/10',
     red: 'text-red-500 bg-red-500/10',
   };
+
+  const numericVal = typeof value === 'number' ? value : parseFloat(String(value).replace(/,/g, ''));
+  const isPureNumber = !isNaN(numericVal) && String(value).trim().match(/^[0-9,.%+$]+$/);
 
   return (
     <Card className="modern-card relative overflow-hidden group">
@@ -42,7 +46,11 @@ export function StatsCard({ title, value, icon: Icon, trend, color = 'blue' }: S
             {title}
           </CardTitle>
           <div className="text-3xl font-black text-foreground tracking-tight">
-            {typeof value === 'number' ? value.toLocaleString() : value}
+            {isPureNumber ? (
+              <AnimatedCounter value={numericVal} suffix={String(value).includes('%') ? '%' : ''} />
+            ) : (
+              value
+            )}
           </div>
         </div>
       </CardHeader>
