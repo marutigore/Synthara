@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { encryptKey, decryptKey } from "@/lib/utils/encryption";
-import { cookies } from "next-headers"; // Wait, Next.js 15 cookies import is from 'next/headers'
-
-// Let's import cookies correctly from next/headers
 import { cookies as getCookies } from "next/headers";
 
 export async function POST(request: NextRequest) {

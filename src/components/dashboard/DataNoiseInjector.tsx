@@ -14,7 +14,7 @@ interface DataNoiseInjectorProps {
 
 export function DataNoiseInjector({ data, onDataUpdate }: DataNoiseInjectorProps) {
   const { toast } = useToast();
-  const [noiseLevel, setNoiseLevel] = useState<number>([5]);
+  const [noiseLevel, setNoiseLevel] = useState<number[]>([5]);
 
   const handleInjectNoise = () => {
     if (!data || data.length === 0) return;
