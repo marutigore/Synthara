@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Settings as SettingsIcon } from 'lucide-react';
+import { ThemeBuilder } from '@/components/dashboard/ThemeBuilder';
 
 
 export default function SettingsPage() {
@@ -15,8 +16,11 @@ export default function SettingsPage() {
           <SettingsIcon className="h-6 w-6" />
           Settings
         </h1>
-        <p className="text-sm text-muted-foreground">General application settings and configurations.</p>
+        <p className="text-sm text-muted-foreground">General application settings and theme configurations.</p>
       </div>
+
+      <ThemeBuilder />
+
       <Card>
         <CardHeader>
           <CardTitle className="font-headline flex items-center"><SettingsIcon className="mr-2"/>Application Settings</CardTitle>
