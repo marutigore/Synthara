@@ -25,6 +25,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { AchievementSystem } from '@/components/dashboard/AchievementSystem';
 
 // API keys will be loaded from real data source when implemented
 
@@ -189,6 +190,8 @@ export default function ProfilePage() {
           Manage your account information, preferences, and security settings.
         </p>
       </div>
+
+      <AchievementSystem />
 
       <Tabs defaultValue="profile" className="w-full">
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6 sm:mb-8 h-auto p-1 sm:p-1.5 rounded-lg shadow-sm">
