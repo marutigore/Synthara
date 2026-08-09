@@ -1,0 +1,16 @@
+{
+  "name": "Synthara AI - Web Intelligence Platform",
+  "short_name": "Synthara AI",
+  "description": "Autonomous AI Web Scraping & Synthetic Data Generation Platform",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0b0f17",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

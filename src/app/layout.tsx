@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   keywords: 'synthetic data, data generation, AI, machine learning, data analysis, data privacy, synthara',
 };
 
+import { PwaInstaller } from '@/components/ui/PwaInstaller';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,7 +42,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <head>
-        {/* Removed direct Google Fonts links as next/font handles optimization */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#3b82f6" />
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
         <ThemeProvider
@@ -55,6 +58,7 @@ export default function RootLayout({
           </Suspense>
           <ErrorHandler />
           <OfflineBanner />
+          <PwaInstaller />
           {children}
           <Toaster />
         </ThemeProvider>
