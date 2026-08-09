@@ -1,6 +1,7 @@
 
 import { DashboardShell } from './_components/DashboardShell';
 import { NavigationLoadingProvider } from '@/components/providers/navigation-loading-provider';
+import { PageTransitionProvider } from '@/components/providers/PageTransitionProvider';
 import { OnboardingTour } from '@/components/ui/OnboardingTour';
 
 
@@ -14,7 +15,9 @@ export default function DashboardLayout({
       <NavigationLoadingProvider>
         <OnboardingTour />
         <DashboardShell>
-          {children}
+          <PageTransitionProvider>
+            {children}
+          </PageTransitionProvider>
         </DashboardShell>
       </NavigationLoadingProvider>
     </div>
