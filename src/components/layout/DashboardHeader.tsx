@@ -23,6 +23,7 @@ import { useRouter } from 'next/navigation';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 import { NotificationCenter } from '@/components/dashboard/NotificationCenter';
+import { Breadcrumbs } from './Breadcrumbs';
 
 export function DashboardHeader() {
   const { isMobile } = useSidebar();
