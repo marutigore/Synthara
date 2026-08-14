@@ -629,11 +629,11 @@ export function ModelTrainingClient() {
           const metadataJson = new Blob([JSON.stringify(meta, null, 2)], { type: "application/json" });
 
           const basePath = `${userId}/${createdJobId}`;
-          const client = sb;
-          if (client) {
-            const up1 = await client.storage.from("models").upload(`${basePath}/model.json`, modelJson, { upsert: true, contentType: "application/json" });
-            const up2 = await client.storage.from("models").upload(`${basePath}/weights.bin`, weightsBin, { upsert: true, contentType: "application/octet-stream" });
-            const up3 = await client.storage.from("models").upload(`${basePath}/metadata.json`, metadataJson, { upsert: true, contentType: "application/json" });
+          if (sb) {
+            const storage = sb.storage;
+            const up1 = await storage.from("models").upload(`${basePath}/model.json`, modelJson, { upsert: true, contentType: "application/json" });
+            const up2 = await storage.from("models").upload(`${basePath}/weights.bin`, weightsBin, { upsert: true, contentType: "application/octet-stream" });
+            const up3 = await storage.from("models").upload(`${basePath}/metadata.json`, metadataJson, { upsert: true, contentType: "application/json" });
             if (!up1.error && !up2.error && !up3.error) {
               artifactPath = `${basePath}/model.json`;
             }
