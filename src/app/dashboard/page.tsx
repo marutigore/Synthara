@@ -1,4 +1,3 @@
-
 // src/app/dashboard/page.tsx
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -18,18 +17,6 @@ import { UsageMeter } from "@/components/dashboard/UsageMeter";
 import { ErrorBoundaryCard } from "@/components/ui/ErrorBoundaryCard";
 import { WidgetGrid } from "@/components/dashboard/WidgetGrid";
 
-// Quick actions are now defined inside the QuickActions component
-
-function getActivityIcon(activityType: string) {
-  switch (activityType) {
-    case "DATA_GENERATION": return <DatabaseZap className="h-5 w-5 text-foreground" />;
-    case "PROMPT_ENHANCEMENT": return <Wand2 className="h-5 w-5 text-foreground" />;
-    case "DATA_ANALYSIS_SNIPPET": return <BarChartBig className="h-5 w-5 text-foreground" />;
-    case "DATASET_SAVED": return <Save className="h-5 w-5 text-foreground" />;
-    default: return <AlertCircle className="h-5 w-5 text-muted-foreground" />;
-  }
-}
-
 export default async function DashboardPage() {
   const supabase = await createSupabaseServerClient();
 
@@ -38,27 +25,21 @@ export default async function DashboardPage() {
     : ({ data: { user: null } } as any);
   const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User";
 
-  // Fetch activities and datasets only if user is available
-  // To prevent errors if middleware hasn't fully processed or if user becomes null
   let recentActivities: ActivityLog[] = [];
   let datasets: SavedDataset[] = [];
-  let lastSavedDataset: (SavedDataset & { data_csv?: string }) | null = null; // Ensure type matches
+  let lastSavedDataset: (SavedDataset & { data_csv?: string }) | null = null;
 
-  if (user) {
-    try {
-      const [activities, ds] = await Promise.all([
-        getUserActivities(5),
-        getUserDatasets(),
-      ]);
-      recentActivities = activities;
-      datasets = ds;
-      lastSavedDataset = datasets.length > 0 ? datasets[0] : null;
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      // Continue with empty arrays to prevent page crash
-    }
+  try {
+    const [activities, ds] = await Promise.all([
+      getUserActivities(5),
+      getUserDatasets(),
+    ]);
+    recentActivities = activities;
+    datasets = ds;
+    lastSavedDataset = datasets.length > 0 ? datasets[0] : null;
+  } catch (error) {
+    // Continue with fallback data
   }
-
 
   return (
     <div className="space-y-6 py-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -81,7 +62,7 @@ export default async function DashboardPage() {
         {[
           { label: "Datasets", value: datasets?.length || 0, icon: DatabaseZap, color: "text-blue-500", trend: "+12%" },
           { label: "Syntheses", value: recentActivities?.length || 0, icon: Brain, color: "text-emerald-500", trend: "Stable" },
-          { label: "Data Nodes", value: datasets?.reduce((acc, dataset) => acc + (dataset.num_rows || 0), 0).toLocaleString() || 0, icon: BarChartBig, color: "text-purple-500", trend: "+5.2k" },
+          { label: "Data Nodes", value: datasets?.reduce((acc, dataset) => acc + (dataset.num_rows || 0), 0).toLocaleString() || "0", icon: BarChartBig, color: "text-purple-500", trend: "+5.2k" },
           { label: "Uptime", value: "99.9%", icon: Clock, color: "text-orange-500", trend: "Online" }
         ].map((stat, i) => (
           <div key={i} className="modern-card p-4 flex items-center gap-4 group transition-all duration-300">

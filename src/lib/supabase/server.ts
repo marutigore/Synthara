@@ -32,6 +32,24 @@ export async function createSupabaseServerClient() {
           }
         },
       },
+      global: {
+        fetch: async (url: RequestInfo | URL, options?: RequestInit) => {
+          try {
+            return await fetch(url, options);
+          } catch (err: any) {
+            return new Response(
+              JSON.stringify({
+                message: 'Supabase server endpoint unreachable (Offline Dev Mode)',
+                error: 'offline_dev_mode',
+              }),
+              {
+                status: 503,
+                headers: { 'Content-Type': 'application/json' },
+              }
+            );
+          }
+        },
+      },
     }
   );
 }
