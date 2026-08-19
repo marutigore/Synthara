@@ -35,30 +35,51 @@ export function DashboardHeader() {
   React.useEffect(() => {
     setHasMounted(true);
     if (!supabase) return;
+    let isMounted = true;
+
     const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
+      try {
+        const res = await supabase.auth.getUser();
+        if (isMounted && res?.data?.user) {
+          setUser(res.data.user);
+        }
+      } catch (err) {
+        // Silently ignore offline network error in dev
+      }
     };
     fetchUser();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-      if (event === 'SIGNED_OUT') {
-        router.refresh();
-      }
-      if (event === 'SIGNED_IN') {
-        router.refresh();
-      }
-    });
+    try {
+      const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        if (isMounted) {
+          setUser(session?.user ?? null);
+        }
+        if (event === 'SIGNED_OUT') {
+          router.refresh();
+        }
+        if (event === 'SIGNED_IN') {
+          router.refresh();
+        }
+      });
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+      return () => {
+        isMounted = false;
+        authListener?.subscription?.unsubscribe();
+      };
+    } catch (err) {
+      return () => {
+        isMounted = false;
+      };
+    }
   }, [supabase, router]);
 
   const handleSignOut = async () => {
     if (!supabase) return;
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      // ignore
+    }
     router.push('/auth');
   };
 

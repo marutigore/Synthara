@@ -40,24 +40,45 @@ export function AppSidebar() {
 
     React.useEffect(() => {
         if (!supabase) return;
+        let isMounted = true;
+
         const fetchUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
+            try {
+                const res = await supabase.auth.getUser();
+                if (isMounted && res?.data?.user) {
+                    setUser(res.data.user);
+                }
+            } catch (err) {
+                // Silently ignore offline network error in dev
+            }
         };
         fetchUser();
 
-        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-            setUser(session?.user ?? null);
-        });
+        try {
+            const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+                if (isMounted) {
+                    setUser(session?.user ?? null);
+                }
+            });
 
-        return () => {
-            authListener.subscription.unsubscribe();
-        };
+            return () => {
+                isMounted = false;
+                authListener?.subscription?.unsubscribe();
+            };
+        } catch (err) {
+            return () => {
+                isMounted = false;
+            };
+        }
     }, [supabase]);
 
     const handleSignOut = async () => {
         if (!supabase) return;
-        await supabase.auth.signOut();
+        try {
+            await supabase.auth.signOut();
+        } catch (err) {
+            // ignore
+        }
         router.push("/auth");
     };
 

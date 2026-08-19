@@ -66,15 +66,20 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchUser = async () => {
       if (!supabase) return;
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setCurrentUser(user);
-        setFullName(user.user_metadata?.full_name || '');
-        setRole(user.user_metadata?.role || '');
-        setOrganization(user.user_metadata?.organization || '');
-        if (user.user_metadata?.avatar_url) {
-          setAvatarPreview(user.user_metadata.avatar_url);
+      try {
+        const res = await supabase.auth.getUser();
+        const user = res?.data?.user;
+        if (user) {
+          setCurrentUser(user);
+          setFullName(user.user_metadata?.full_name || '');
+          setRole(user.user_metadata?.role || '');
+          setOrganization(user.user_metadata?.organization || '');
+          if (user.user_metadata?.avatar_url) {
+            setAvatarPreview(user.user_metadata.avatar_url);
+          }
         }
+      } catch (err) {
+        // Silently ignore offline network error in dev
       }
     };
     fetchUser();
