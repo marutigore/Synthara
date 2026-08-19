@@ -36,7 +36,14 @@ export function createSupabaseBrowserClient() {
   try {
     const client = createBrowserClient(
       supabaseUrl,
-      supabaseAnonKey
+      supabaseAnonKey,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: true,
+          detectSessionInUrl: false,
+        },
+      }
     );
     return client;
   } catch (e: any) {
