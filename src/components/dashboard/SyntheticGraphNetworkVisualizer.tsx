@@ -136,7 +136,7 @@ export function SyntheticGraphNetworkVisualizer() {
               <g key={node.id} transform={`translate(${node.x}, ${node.y})`}>
                 <circle r="16" fill="#1e1e2e" stroke="#6366f1" strokeWidth="2" />
                 {node.type === 'Device' && <rect x="-6" y="-6" width="12" height="12" rx="2" fill="#6366f1" opacity="0.8" />}
-                {node.type === 'Person' && <circle cx="0" cy="-2" r="3" fill="#6366f1" opacity="0.8" /><path d="M -6 6 Q 0 0 6 6" stroke="#6366f1" fill="none" strokeWidth="2" />}
+                {node.type === 'Person' && <><circle cx="0" cy="-2" r="3" fill="#6366f1" opacity="0.8" /><path d="M -6 6 Q 0 0 6 6" stroke="#6366f1" fill="none" strokeWidth="2" /></>}
                 {node.type === 'Account' && <circle r="6" fill="none" stroke="#10b981" strokeWidth="2" />}
                 
                 <text y="26" fontSize="8" fill="#cdd6f4" textAnchor="middle" fontWeight="bold">
