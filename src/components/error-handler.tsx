@@ -6,34 +6,53 @@ export function ErrorHandler() {
   useEffect(() => {
     // Handle unhandled promise rejections
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error('Unhandled promise rejection:', event.reason);
-      
-      // Prevent the default browser behavior
+      const reason = event.reason;
+      const errorName = reason?.name || '';
+      const errorMessage = reason?.message || String(reason || '');
+
+      // Suppress standard offline / unauthenticated state notifications in dev mode
+      if (
+        errorName === 'AuthSessionMissingError' ||
+        errorName === 'AuthRetryableFetchError' ||
+        errorName === 'AuthApiError' ||
+        errorMessage.includes('Auth session missing') ||
+        errorMessage.includes('Failed to fetch')
+      ) {
+        event.preventDefault();
+        return;
+      }
+
+      // Prevent the default browser crash
       event.preventDefault();
-      
-      // Log the error for debugging
-      if (event.reason instanceof Error) {
-        console.error('Error details:', {
-          message: event.reason.message,
-          stack: event.reason.stack,
-          name: event.reason.name
+
+      // Log other error details for debugging
+      if (reason instanceof Error) {
+        console.warn('Unhandled promise rejection:', {
+          message: reason.message,
+          name: reason.name,
         });
-      } else {
-        console.error('Rejection reason:', event.reason);
       }
     };
 
     // Handle uncaught errors
     const handleError = (event: ErrorEvent) => {
-      console.error('Uncaught error:', event.error);
-      
-      // Log the error for debugging
-      if (event.error instanceof Error) {
-        console.error('Error details:', {
-          message: event.error.message,
-          stack: event.error.stack,
-          name: event.error.name
-        });
+      const error = event.error;
+      const errorName = error?.name || '';
+      const errorMessage = error?.message || event.message || '';
+
+      if (
+        errorName === 'AuthSessionMissingError' ||
+        errorName === 'AuthRetryableFetchError' ||
+        errorName === 'AuthApiError' ||
+        errorMessage.includes('Auth session missing') ||
+        errorMessage.includes('Failed to fetch')
+      ) {
+        event.preventDefault();
+        return;
+      }
+
+      if (error instanceof Error) {
+        console.warn('Handled uncaught error:', error.message);
       }
     };
 
@@ -48,5 +67,5 @@ export function ErrorHandler() {
     };
   }, []);
 
-  return null; // This component doesn't render anything
+  return null;
 }

@@ -51,20 +51,45 @@ export function createSupabaseBrowserClient() {
           },
         },
         global: {
-          // Safe fetch wrapper to handle offline mode without triggering AuthRetryableFetchError
+          // Safe fetch wrapper to handle offline mode cleanly
           fetch: async (url: RequestInfo | URL, options?: RequestInit) => {
             try {
               return await fetch(url, options);
             } catch (err: any) {
               const urlStr = typeof url === 'string' ? url : url.toString();
-              const isAuthUrl = urlStr.includes('/auth/v1');
 
-              // Return a successful 200 payload so GoTrue does not throw AuthRetryableFetchError
-              const fallbackBody = isAuthUrl
-                ? { user: null, session: null, access_token: null, data: null }
-                : [];
+              // For refresh token requests, return a clean invalid_grant so GoTrue clears expired tokens cleanly
+              if (urlStr.includes('/auth/v1/token')) {
+                return new Response(
+                  JSON.stringify({
+                    error: 'invalid_grant',
+                    error_description: 'Invalid Refresh Token: Offline mode',
+                    code: 'invalid_grant',
+                  }),
+                  {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' },
+                  }
+                );
+              }
 
-              return new Response(JSON.stringify(fallbackBody), {
+              // For other auth requests (like getUser), return null user without throwing
+              if (urlStr.includes('/auth/v1')) {
+                return new Response(
+                  JSON.stringify({
+                    user: null,
+                    session: null,
+                    data: { user: null, session: null },
+                  }),
+                  {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' },
+                  }
+                );
+              }
+
+              // For table REST queries, return empty list
+              return new Response(JSON.stringify([]), {
                 status: 200,
                 headers: { 'Content-Type': 'application/json' },
               });
