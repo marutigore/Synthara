@@ -4,8 +4,16 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
 
 export default async function AuthPage() {
+  const cookieStore = await cookies();
+  const isDevSession = cookieStore.get('synthara_dev_session')?.value === 'true';
+
+  if (isDevSession) {
+    redirect('/dashboard');
+  }
+
   const supabase = await createSupabaseServerClient();
   async function withTimeout<T>(p: Promise<T>, ms: number, fallback: T): Promise<T> {
     return Promise.race([
@@ -14,16 +22,15 @@ export default async function AuthPage() {
     ]) as Promise<T>;
   }
   const { data: { user } = { user: null } } = supabase
-    ? await withTimeout<any>(supabase.auth.getUser(), 2000, { data: { user: null } })
+    ? await withTimeout<any>(supabase.auth.getUser(), 1000, { data: { user: null } })
     : ({ data: { user: null } } as any);
+
   if (user) {
     redirect('/dashboard');
   }
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background relative overflow-hidden p-3 sm:p-4 lg:p-6">
-      {/* Background removed for monochrome */}
-      <div className="hidden" />
-
       <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10">
         <Link href="/" aria-label="Synthara AI Homepage">
           <SyntharaLogo className="h-8 sm:h-9 lg:h-10 w-auto text-foreground" />

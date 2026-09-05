@@ -74,13 +74,19 @@ export function DashboardHeader() {
   }, [supabase, router]);
 
   const handleSignOut = async () => {
-    if (!supabase) return;
-    try {
-      await supabase.auth.signOut();
-    } catch (err) {
-      // ignore
+    document.cookie = "synthara_dev_session=; path=/; max-age=0;";
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('synthara_user_email');
+      localStorage.removeItem('synthara_user_name');
     }
-    router.push('/auth');
+    if (supabase) {
+      try {
+        await supabase.auth.signOut();
+      } catch (err) {
+        // ignore
+      }
+    }
+    window.location.href = '/auth';
   };
 
   const commonRightContent = (
