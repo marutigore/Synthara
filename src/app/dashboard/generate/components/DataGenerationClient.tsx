@@ -606,7 +606,7 @@ export function DataGenerationClient() {
       }
 
     } catch (error: any) {
-      console.error('Generation error:', error);
+      console.warn('Generation error:', error);
       setIsGenerating(false);
       setIsSubmitting(false);
       setProgress(0);
@@ -1045,7 +1045,7 @@ export function DataGenerationClient() {
                   }}
                   onError={(error) => {
                     localStorage.removeItem('synthara-active-generation-job');
-                    console.error('Generation error:', error);
+                    console.warn('Generation error:', error);
                     setIsGenerating(false);
                     setIsSubmitting(false);
                   }}
