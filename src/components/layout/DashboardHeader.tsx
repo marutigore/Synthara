@@ -42,23 +42,33 @@ export function DashboardHeader() {
         const res = await supabase.auth.getUser();
         if (isMounted && res?.data?.user) {
           setUser(res.data.user);
+          return;
         }
       } catch (err) {
         // Silently ignore offline network error in dev
+      }
+
+      if (isMounted && typeof window !== 'undefined') {
+        const localEmail = localStorage.getItem('synthara_user_email');
+        const localName = localStorage.getItem('synthara_user_name');
+        if (localEmail) {
+          setUser({
+            id: 'dev-user',
+            email: localEmail,
+            user_metadata: { full_name: localName || localEmail.split('@')[0] },
+            app_metadata: {},
+            aud: 'authenticated',
+            created_at: new Date().toISOString(),
+          } as any);
+        }
       }
     };
     fetchUser();
 
     try {
-      const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
         if (isMounted) {
           setUser(session?.user ?? null);
-        }
-        if (event === 'SIGNED_OUT') {
-          router.refresh();
-        }
-        if (event === 'SIGNED_IN') {
-          router.refresh();
         }
       });
 
