@@ -37,16 +37,17 @@ export async function createSupabaseServerClient() {
           try {
             return await fetch(url, options);
           } catch (err: any) {
-            return new Response(
-              JSON.stringify({
-                message: 'Supabase server endpoint unreachable (Offline Dev Mode)',
-                error: 'offline_dev_mode',
-              }),
-              {
-                status: 503,
-                headers: { 'Content-Type': 'application/json' },
-              }
-            );
+            const urlStr = typeof url === 'string' ? url : url.toString();
+            const isAuthUrl = urlStr.includes('/auth/v1');
+
+            const fallbackBody = isAuthUrl
+              ? { user: null, session: null, access_token: null, data: null }
+              : [];
+
+            return new Response(JSON.stringify(fallbackBody), {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' },
+            });
           }
         },
       },
