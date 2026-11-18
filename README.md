@@ -1,222 +1,232 @@
-# Synthara · AI-Powered Web Data Generation Platform
+<div align="center">
 
-Synthara turns natural-language ideas into trustworthy, structured datasets by blending intelligent search, resilient scraping, AI structuring, and Supabase-backed persistence. This README captures how the full system works today, the moving parts involved, and how to run it end-to-end.
+# ⚡ Synthara AI
 
-## Table of Contents
-1. [Product Overview](#product-overview)
-2. [Key Capabilities](#key-capabilities)
-3. [Architecture](#architecture)
-4. [Data Generation Workflow](#data-generation-workflow)
-5. [Services & Core Modules](#services--core-modules)
-6. [Project Layout](#project-layout)
-7. [Local Development Setup](#local-development-setup)
-8. [Environment Variables](#environment-variables)
-9. [Database & Supabase Configuration](#database--supabase-configuration)
-10. [Crawl4AI Python Service](#crawl4ai-python-service)
-11. [Developer Tooling & Scripts](#developer-tooling--scripts)
-12. [Deployment Checklist](#deployment-checklist)
-13. [Troubleshooting](#troubleshooting)
+### Autonomous Web-Grounded Synthetic Data & Analytics Platform
+
+*Turn natural language prompts into clean, schema-validated, privacy-audited datasets in real time.*
+
+<p>
+  <a href="https://github.com/marutigore/Synthara/actions/workflows/ci.yml">
+    <img src="https://github.com/marutigore/Synthara/actions/workflows/ci.yml/badge.svg" alt="Synthara CI" />
+  </a>
+  <a href="https://github.com/marutigore/Synthara/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" />
+  </a>
+  <img src="https://img.shields.io/badge/Next.js-15-black?logo=next.js&logoColor=white" alt="Next.js 15" />
+  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Gemini_2.5_Flash-1M_Context-4285F4?logo=google&logoColor=white" alt="Gemini 2.5 Flash" />
+  <img src="https://img.shields.io/badge/OpenRouter-DeepSeek_R1-7C3AED" alt="OpenRouter DeepSeek" />
+  <img src="https://img.shields.io/badge/Docker-Crawl4AI-2496ED?logo=docker&logoColor=white" alt="Docker Crawl4AI" />
+  <img src="https://img.shields.io/badge/Supabase-PostgreSQL_RLS-3ECF8E?logo=supabase&logoColor=white" alt="Supabase" />
+</p>
+
+<p>
+  <a href="#-key-features">Features</a> •
+  <a href="#-system-architecture">Architecture</a> •
+  <a href="#-api-ecosystem">API Ecosystem</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="docs/ARCHITECTURE.md">Deep Dive Docs</a> •
+  <a href="CONTRIBUTING.md">Contributing</a>
+</p>
+
+</div>
 
 ---
 
-## Product Overview
+## 🎯 Overview
 
-Synthara is a Next.js 15 + TypeScript platform that lets users describe the dataset they need (“Top EV charging operators in India with station counts by city”) and generates a real CSV grounded in the public web. The app:
+**Synthara** is an end-to-end AI data engineering platform that blends **automated web discovery**, **containerized headless crawling**, **two-phase multi-model LLM structuring**, and **real-time Server-Sent Events (SSE)** to transform natural-language prompts (e.g., *"Top EV charging networks in India with station counts and pricing"*) into production-ready CSV/JSON datasets.
 
-- Enhances the prompt into search-ready queries.
-- Collects up to 15 high-quality URLs (overfetching + ranking ensures coverage).
-- Scrapes every page through a dedicated Python microservice (Crawl4AI) with retries/backfill logic.
-- Chunks the combined corpus, prioritizes the most relevant slices, and streams them into an AI structuring flow (OpenRouter DeepSeek via `SimpleAI`).
-- Stores generated datasets, logs, and user actions in Supabase with RLS, exposing history and download flows in the dashboard UI.
+Unlike naive LLM wrappers, Synthara is engineered for production resilience:
+- **Self-healing scraping** via Dockerized **Crawl4AI** with autonomous domain-synthesis fallbacks when target sites block bots.
+- **Two-phase Map-Reduce structuring** that drafts entities first and induces high-density schemas second, preventing context saturation and hallucinations.
+- **Built-in Data Quality & Privacy Guard** featuring PII detection/masking, Shannon entropy fidelity scoring, statistical profiling, AI Smart-Fix, and interactive Nivo visualizations.
 
-## Key Capabilities
+---
 
-- **AI Orchestration Pipeline** – modular flows for query enhancement, URL ranking, scraping, chunking, AI structuring, and chunk file emission.
-- **Real-Time Progress UX** – server-sent events surface each pipeline phase, scrape counts, backfill attempts, and AI progress to the dashboard.
-- **High-Recall Scraping** – search flow over-fetches up to 3× the requested `maxUrls`, deduplicates, and backfills failed scrapes in 5-URL batches until targets are met.
-- **AI Structuring with Safety Nets** – raw responses are persisted (`temp/ai-raw-response-*.json`), post-processed with multi-strategy JSON salvage, and attached to sessions for auditability.
-- **Multi-Provider AI** – `SimpleAI` uses OpenRouter/DeepSeek for long-form JSON outputs, while `GeminiService` supports key rotation, retry logic, and strict schema validation for other flows.
-- **Supabase-Backed Auth & Storage** – email/password auth, dataset history, activity logging, and secure file storage buckets.
+## ✨ Key Features
 
-## Architecture
+| Module | Capabilities |
+| :--- | :--- |
+| **🕷️ Autonomous Ingestion Engine** | Containerized Crawl4AI headless Chromium microservice (`:11235`), SerpAPI 3× URL over-fetching, smart backfill queues, `fit_markdown` extraction, and autonomous AI domain fallback on HTTP 403/500 blocks. |
+| **🧠 Multi-Model AI Orchestrator** | Hybrid routing across **Google Gemini 2.5 Flash** (1M token window) and **OpenRouter (DeepSeek R1 / Nemotron)** with 170k-char corpus budgeting, dynamic schema induction, and JSON salvage recovery. |
+| **📡 Real-Time SSE Streaming** | Native Web Streams (`text/event-stream`) delivering sub-second terminal telemetry, progress percentages, scraped previews, 30s keep-alive heartbeats, and in-flight request deduplication. |
+| **🛡️ Privacy & Fidelity Guard** | Automated PII scanner (`email`, `phone`, `ssn`, `credit_card`, `ip_address`, `passport`) with `TAG`/`HASH`/`ASTERISKS` masking, Shannon entropy fidelity grading (`A+`–`D`), and GDPR/CCPA/HIPAA audits. |
+| **📊 Analytics, Viz & Smart-Fix** | Statistical profiler (quartiles, outliers, correlations), AI Smart-Fix anomaly remediation, Nivo chart recommendations, OpenStreetMap geocoding, and one-click `.docx` executive report exports. |
+| **🔐 Enterprise Auth & BYOK Vault** | Supabase PostgreSQL with Row-Level Security (RLS), dataset history/diff/merger, community Marketplace, and **AES-256 encrypted** HTTP-only cookies for user-supplied API keys. |
 
-| Layer | Details |
-| --- | --- |
-| **Frontend** | Next.js 15 App Router, React 18, Tailwind + shadcn/ui, Radix primitives, streaming route handlers, responsive dashboard UI. |
-| **Backend (Node)** | Next.js server actions + API routes orchestrate flows, emit SSE updates, and secure Supabase writes. |
-| **AI & Search** | Google Gemini (multi-key rotation), OpenRouter DeepSeek (structured outputs), SerpAPI search, heuristics for query planning. |
-| **Scraping** | External Crawl4AI Python service (Chrome-enabled) with markdown + table extraction; Node orchestrator waits for all scrapes and reruns batches when under target. |
-| **Data Layer** | Supabase PostgreSQL with Row-Level Security, buckets for generated CSV/JSON, activity logs, and dataset metadata. |
-| **Python Services** | `server/crawl4ai_service` (scraping) plus optional trainer service (port 8001) for ML preview scripts. |
+---
 
-## Data Generation Workflow
+## 🏗️ System Architecture
 
-1. **Input validation** – `IntelligentWebScrapingInputSchema` (`src/ai/flows/intelligent-web-scraping-flow.ts`) constrains rows/URLs and toggles AI usage.
-2. **Query enhancement & URL harvest** – `generateSearchUrls` expands the prompt, filters social/SERP pages, and tracks both initial batches and a backfill queue.
-3. **Crawl orchestration** – Node calls the Crawl4AI microservice for every URL, waits for completion, and keeps retrying/backfilling until enough clean documents exist.
-4. **Chunking & retrieval prep** – scraped markdown is chunked (~1.5k chars with overlap), scored against query terms, and trimmed to the model’s 170k-char budget. A temp snapshot of the combined corpus is also written for traceability.
-5. **AI structuring** – `SimpleAI.structureRelevantChunksToDataset` prompts DeepSeek to design schema + rows, saving raw responses and mirroring them to `temp/analyzed/{sessionId}-ai-analysis.json` for downstream reuse.
-6. **Post-processing & export** – parsed rows are chunked into `/temp/chunks` for resumable streaming, Supabase records are updated, and CSV/JSON downloads become available in the UI.
+```mermaid
+flowchart TD
+    User["👤 User / Next.js 15 Dashboard"] -->|POST Prompt + Config| SSE["📡 /api/generate-stream (SSE)"]
 
-## Services & Core Modules
+    subgraph Ingestion ["1. Discovery & Headless Ingestion"]
+        SSE --> Serp["🔎 SerpAPI URL Discovery"]
+        Serp --> Filter["🧹 URL Filter & Backfill Queue"]
+        Filter --> Crawl["🐳 Crawl4AI Docker (:11235)"]
+        Crawl -->|Blocked / Empty| Fallback["⚡ Autonomous AI Domain Fallback"]
+    end
 
-| Module | Purpose |
-| --- | --- |
-| `src/ai/flows/intelligent-web-scraping-flow.ts` | Primary orchestrator covering search, scraping, chunking, AI structuring, and chunk file emission. |
-| `src/ai/simple-ai.ts` | OpenRouter client with schema-constrained prompting, raw response persistence, and aggressive JSON recovery heuristics. |
-| `src/services/gemini-service.ts` | Gemini Flash client supporting multiple API keys, per-call rotation on 429/401/403 errors, and structured parsing helpers. |
-| `src/services/serpapi-service.ts` | Ranked URL discovery, deduplication, and source scoring. |
-| `src/app/api/crawl4ai/route.ts` | Bridge between Next.js and the Python scraper (batch requests, retries, and health checks). |
-| `scripts/setup-database.js` | Applies Supabase schema and seed data locally. |
-| `scripts/test-gemini-integration.ts` | Smoke test for Gemini credentials and parsing logic. |
+    subgraph Structuring ["2. Two-Phase LLM Pipeline"]
+        Crawl --> Cleaner["🧽 Noise Reduction & 170k Char Cap"]
+        Fallback --> Cleaner
+        Cleaner --> Phase1["📝 Phase 1: Exhaustive Entity Draft"]
+        Phase1 --> Phase2["🏗️ Phase 2: Dynamic Schema & JSON Rows"]
+        Phase2 --> LLM["🤖 Gemini 2.5 Flash / OpenRouter DeepSeek"]
+    end
 
-## Project Layout
+    subgraph PostProcess ["3. Quality, Privacy & Persistence"]
+        LLM --> CSV["📄 CSV / Chunked Snapshot"]
+        CSV --> Privacy["🛡️ Privacy & Fidelity Guard"]
+        CSV --> Profiler["📊 Statistical Profiler & Smart-Fix"]
+        CSV --> DB[("🗄️ Supabase PostgreSQL + RLS")]
+    end
 
-```
-src/
-├── app/                  # Next.js routes, layouts, and server actions
-├── ai/                   # Prompt flows, retrieval logic, SimpleAI wrapper
-├── components/           # UI primitives (auth, dashboard, dataviz, layout)
-├── hooks/                # Client utilities (toast, responsive helpers)
-├── services/             # External integrations (Gemini, SerpAPI, Supabase)
-├── lib/                  # Config/helpers (Supabase client, constants)
-└── server/               # Python microservices and utilities
+    SSE -.->|Live Logs, Progress & Heartbeat| User
 ```
 
-The repo also includes `scripts/` for database + AI validation tasks, `output/` for generated CSVs, and `temp/` (gitignored) for AI artifacts.
+> 📖 For detailed sequence diagrams, token budgeting strategy, and scaling architecture, read **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
-## Local Development Setup
+---
 
-### 1. Prerequisites
-- Node.js 18+
-- npm 8+ (or pnpm/yarn if preferred)
-- Python 3.10+ with venv support (for Crawl4AI service)
-- Supabase project (free tier works)
+## 🔌 API Ecosystem
 
-### 2. Install dependencies
+Synthara integrates **7 external services** and exposes **37 internal Next.js API endpoints**:
+
+### External Integrations
+- **Google Gemini API (`gemini-2.5-flash`)** — Native high-speed, 1M-context extraction & structuring.
+- **OpenRouter API (`DeepSeek R1` / `Nemotron`)** — Multi-model reasoning and fallback routing.
+- **SerpAPI** — Live Google SERP discovery and URL ranking.
+- **Crawl4AI Microservice** — Containerized Playwright/Chromium HTML-to-Markdown crawler.
+- **Supabase** — PostgreSQL REST API, JWT Auth, RLS, and Storage buckets.
+- **OpenStreetMap Nominatim** — Geospatial geocoding for map visualizations.
+- **Hugging Face Transformers (`@xenova/transformers`)** — Local `all-MiniLM-L6-v2` embeddings for RAG chunking.
+
+### Highlighted Internal Endpoints
+
+| Endpoint | Method | Description |
+| :--- | :---: | :--- |
+| `/api/generate-stream` | `POST` / `GET` | Real-time SSE pipeline streaming scraping, drafting, and final CSV dataset |
+| `/api/dataset/privacy-fidelity` | `POST` | Scans & masks PII, calculates Shannon entropy fidelity score & compliance audit |
+| `/api/analyze-dataset` | `POST` | Computes column statistics, correlations, outliers, and AI deep insights |
+| `/api/analysis/smart-fix` | `POST` | AI-driven cleaning and remediation for missing/malformed cells |
+| `/api/dataviz/suggest-charts` | `POST` | Recommends optimal Nivo chart configurations for any dataset |
+| `/api/export-docx` | `POST` | Exports formatted Microsoft Word (`.docx`) analytical reports |
+| `/api/keys` | `GET` / `POST` | Manages AES-256 encrypted BYOK credentials in HTTP-only cookies |
+| `/api/mock-api` | `GET` / `POST` | Exposes generated datasets as instant REST mock endpoints |
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- **Node.js 20+** and **npm 9+**
+- **Docker Desktop** (for the Crawl4AI microservice)
+- A free **[Supabase](https://supabase.com)** project
+- API keys for **Google Gemini** (or **OpenRouter**) and **SerpAPI**
+
+### 1. Clone & Install
 ```bash
-git clone <repository-url>
+git clone https://github.com/marutigore/Synthara.git
 cd Synthara
 npm install
 ```
 
-### 3. Create environment files
-Copy `.env.example` to `.env.local` (Next.js) and fill in the values covered in [Environment Variables](#environment-variables). For Python services, mirror the relevant keys into `server/crawl4ai_service/.env` and/or your venv activation.
-
-### 4. Start backing services
-```bash
-# optional: Supabase CLI or hosted project already running
-# start Crawl4AI python microservice (see below)
-
-# run Next.js dev server
-npm run dev
-
-# Windows shortcut
-start.bat
-```
-
-Visit `http://localhost:3000` and sign up with Supabase Auth. The dashboard will stream logs as soon as you trigger a dataset generation job.
-
-### 5. Helpful npm scripts
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Next.js dev server with hot reload. |
-| `npm run build` | Production build (includes lint & type checks in CI). |
-| `npm run lint` | ESLint via Next.js config. |
-| `npm run typecheck` | `tsc --noEmit` for schema drift detection. |
-| `npm run setup:db` | Executes `scripts/setup-database.js`. |
-
-## Environment Variables
-
-Create `.env.local` for the Next.js runtime:
-
+### 2. Configure Environment Variables
+Copy `env.example` to `.env.local` and populate your keys:
 ```bash
 # Supabase
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_ROLE_KEY=...(server-side usage)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# AI & search
-GOOGLE_GEMINI_API_KEYS=key1,key2,key3   # GeminiService rotates on errors
-SERPAPI_KEY=...
-OPENROUTER_API_KEY=...
+# AI Providers & Search
+GOOGLE_GEMINI_API_KEY=your-gemini-key
+OPENROUTER_API_KEY=your-openrouter-key
 OPENROUTER_MODEL=tngtech/deepseek-r1t2-chimera:free
-OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
+SERPAPI_KEY=your-serpapi-key
 
-# Scraping + ancillary services
-CRAWL4AI_SERVICE_URL=http://localhost:8000
-PY_TRAINER_API_KEY=...
-PY_TRAINER_BASE_URL=http://localhost:8001
-
-# App config
+# Crawl4AI Microservice
+CRAWL4AI_SERVICE_URL=http://localhost:11235
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-**Notes**
-- `GOOGLE_GEMINI_API_KEYS` accepts comma/space/semicolon-separated keys; the service auto-rotates when it encounters 429/401/403 or quota issues.
-- Keep Supabase service-role keys on the server only (never expose in the browser bundle).
-- When using optional providers (OpenAI, additional SERP vendors), extend this list accordingly.
+### 3. Initialize Supabase Schema
+Run the SQL statements in [`supabase-complete-schema.sql`](supabase-complete-schema.sql) inside your Supabase SQL Editor (creates tables, indexes, storage bucket, and Row-Level Security policies).
 
-## Database & Supabase Configuration
-
-1. **Create a project** – choose nearest region, capture the database password.
-2. **Apply schema** – run the statements in `supabase-complete-schema.sql` through the SQL editor or `npm run setup:db` locally.
-3. **Auth settings** – set `Site URL` to `http://localhost:3000` for dev and add `/auth/callback` to Redirect URLs.
-4. **Storage** – ensure the `datasets` bucket exists (private). The schema script creates it automatically; otherwise create it manually.
-5. **RLS** – policies shipped in the SQL file enforce per-user dataset access. Confirm they are enabled before onboarding real users.
-
-## Crawl4AI Python Service
-
-Located in `server/crawl4ai_service/`. For local dev:
-
+### 4. Launch Services
 ```bash
-cd server/crawl4ai_service
-python -m venv .venv
-source .venv/Scripts/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-python main.py  # listens on PORT (default 8000)
+# Start Crawl4AI headless browser container
+docker compose up -d crawl4ai
+
+# Start the Next.js development server
+npm run dev
 ```
 
-Expose the URL through `CRAWL4AI_SERVICE_URL`. Production deployments have run successfully on Railway, Render, AWS EC2, or Docker. Whatever platform you choose, ensure Chrome/Playwright dependencies, port forwarding, and health checks are configured; the Next.js route expects JSON responses and will retry failed batches automatically.
-
-## Developer Tooling & Scripts
-
-- `scripts/debug-save.js` – persist AI responses or scraped payloads for offline inspection.
-- `scripts/test-gemini-integration.ts` – verifies Gemini key rotation + JSON parsing before running full jobs.
-- `scripts/setup-database.js` – seeds Supabase tables/ buckets and prints helpful credentials.
-- `scripts/test-database.js` – quick connectivity smoke test.
-
-These scripts assume Node 18+ and the env vars documented above.
-
-## Deployment Checklist
-
-### Pre-deploy
-1. `npm run build` (ensures lint, typecheck, Next build success).
-2. Confirm Supabase schema and storage buckets exist in target env.
-3. Configure env vars on Vercel (or your host) + Python services.
-4. Validate Crawl4AI endpoint accessibility from the deployed Next.js runtime.
-
-### Post-deploy
-1. Hit `/api/health` (if exposed) or run a sample dataset job to ensure SSE + pipeline.
-2. Verify authentication + protected routes.
-3. Confirm Supabase rows/files are created when saving datasets.
-4. Review logs for Gemini/SerpAPI quota warnings.
-
-## Troubleshooting
-
-| Issue | Checks |
-| --- | --- |
-| **“Database tables not set up”** | Ensure `supabase-complete-schema.sql` ran; check Table Editor for `generated_datasets` and row-level policies. |
-| **Authentication failures** | Double-check `NEXT_PUBLIC_SUPABASE_URL/ANON_KEY`, redirect URLs, and Supabase email templates. |
-| **Scrape count stays at 0** | Verify Crawl4AI service port, inspect its logs, ensure URLs aren’t blocked (Google SERP/social). |
-| **AI JSON parsing errors** | Confirm OpenRouter key, inspect `temp/ai-raw-response-*.json`, and rerun job; SimpleAI fallback parsers usually recover malformed responses. |
-| **429 or quota errors** | Add more Gemini keys or lower concurrency; rotation happens automatically once keys are provided. |
-
-### Debug Tips
-- Watch terminal output from `npm run dev` for pipeline phase logs.
-- Inspect `/temp/chunks` and `/temp/analyzed` to confirm AI outputs are being saved.
-- Use `scripts/test-gemini-integration.ts` before production deploys to catch invalid keys early.
+Open **[http://localhost:3000](http://localhost:3000)** to launch the Synthara dashboard.
 
 ---
 
-Synthara keeps AI-driven dataset generation transparent: every phase is logged, cached, and auditable so you can trace which sources informed each row. Happy scraping!
+## 🧰 Tech Stack
+
+<p align="left">
+  <img src="https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Supabase" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+  <img src="https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini" />
+</p>
+
+---
+
+## 📂 Project Structure
+
+```text
+Synthara/
+├── .github/                  # GitHub Actions CI workflow, Issue & PR templates
+├── docs/                     # System architecture & sequence diagrams
+├── scripts/                  # DB setup, smoke tests & AI integration validators
+├── server/                   # Python Crawl4AI & trainer microservices
+├── src/
+│   ├── ai/                   # Two-phase SimpleAI engine, flows & RAG chunker
+│   ├── app/                  # Next.js App Router pages & 37 API endpoints
+│   ├── components/           # Dashboard, terminal logger, dataviz & UI primitives
+│   ├── lib/                  # Supabase clients, AES-256 encryption & job store
+│   └── services/             # Crawl4AI, SerpAPI, Profiler, Privacy Guard, DOCX export
+├── supabase/                 # RLS migration files
+├── docker-compose.yml        # Multi-container orchestration (Next.js + Crawl4AI)
+└── supabase-complete-schema.sql
+```
+
+---
+
+## 🛠️ Developer Scripts
+
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Start Next.js dev server with hot reload |
+| `npm run typecheck` | Run strict TypeScript validation (`tsc --noEmit`) |
+| `npm run lint` | Run ESLint code quality checks |
+| `npm run build` | Create optimized production build |
+| `npm run setup:db` | Initialize Supabase schema and buckets locally |
+
+---
+
+## 🤝 Contributing & License
+
+Contributions are welcome! Please read **[CONTRIBUTING.md](CONTRIBUTING.md)** for branch guidelines and commit conventions.
+
+Distributed under the **MIT License**. See **[LICENSE](LICENSE)** for details.
+
+---
+
+<div align="center">
+  Built with ⚡ by <strong>Maruti Gore</strong>
+</div>
